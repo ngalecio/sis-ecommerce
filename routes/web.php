@@ -19,6 +19,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
+
+Route::get('/debug-key', function () {
+    return config('app.key');
+});
+
+
 Route::get('/', function () {
     return view('welcome');
 });
