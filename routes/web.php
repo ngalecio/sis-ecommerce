@@ -26,7 +26,7 @@ Route::get('/debug-key', function () {
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('/auth/login');
 });
 
 // Route::get('/admin', function () {
