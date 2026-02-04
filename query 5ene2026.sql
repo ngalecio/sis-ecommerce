@@ -1,3 +1,10 @@
+select precio,precio_compra,stock,stock_fraccion,costo_promedio,a.* from productos a order by updated_at desc 
+
+alter table productos add unidad_medida varchar(100)
+alter table productos add cantidad_medida decimal(10,2) 
+alter table productos add cantidad_por_unidad decimal(10,2) 
+alter table productos add stock_fraccion decimal(10,2)
+
 http://vmi1057060.contaboserver.net:9090/jasperserver/rest_v2/reports/reports/strada/crm_lista_precios.pdf?&j_username=jasperadmin&j_password=Todotek.2023@**&id_empresa=1&filtro=&campofiltro=PERSONALIZADO&marca=GM
 
 select * from comprobante_cabeceras where tipo_comprobante = 'CO'
@@ -5,6 +12,7 @@ order by id  desc
 
 select *from clientes
 
+select * from catalogo_detalles
 
 INSERT INTO sucursals (codigo_sucursal,nombre,direccion,telefono,correo,estado) VALUES
 ('001','MATRIZ - GYE','LA PUNTILLA SATELITE /AV PRINCIPAL SECTOR LOS ARCOS','0993912916','dralourdescerna@gmail.com','A'),

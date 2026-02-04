@@ -6,6 +6,7 @@ use App\Models\CatalogoDetalle;
 use App\Models\ComprobanteCabecera;
 use App\Models\ComprobanteDetalle;
 use App\Models\Paciente;
+use App\Models\Producto;
 use App\Models\Secuencia;
 use Illuminate\Http\Request;
 
@@ -276,6 +277,20 @@ class ComprobanteCabeceraController extends Controller
                     $detalleModel->subtotal = $detalle['total'];
                     $detalleModel->total = $detalle['total'];
                     $detalleModel->save();
+
+                    $producto = Producto::find($detalle['producto_id']);
+
+                    if ($producto) {
+                        // Actualizar el stock del producto sumando la cantidad comprada
+                        $costo_total = $detalle['precio'] * $detalle['cantidad'];
+                        $costo_total_anterior = ($producto->costo_promedio ?? 0) * ($producto->stock ?? 0);
+                        $stock=$producto->stock+$detalle['cantidad'];
+                        $nuevo_costo_promedio = ($costo_total_anterior + $costo_total) / $stock;
+                        $producto->costo_promedio = $nuevo_costo_promedio;
+                        $producto->precio_compra = $detalle['precio'];
+                        $producto->stock += $detalle['cantidad'];
+                        $producto->save();  
+                    }
                 }
             }
             DB::commit();

@@ -292,7 +292,7 @@
                                                 <span class="input-group-text"><i
                                                         class="bi bi-currency-dollar"></i></span>
                                                 <input type="number" step="0.01" class="form-control" id="precio"
-                                                    name="precio" placeholder="Precio" disabled>
+                                                    name="precio" placeholder="Precio">
                                             </div>
                                         </div>
                                     </div>
@@ -686,7 +686,7 @@
     function actualizarPrecioInsumo() {
         const productoSelect = document.getElementById('id-productos-insumos');
         const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
-
+       
 
         if (precio) {
             document.getElementById('precio').value = parseFloat(precio).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -811,13 +811,14 @@
             lista_insumos.innerHTML = '<option value="">Seleccione un código</option>';
 
             if (result.data && result.data.length > 0) {
+                console.log('Insumos recibidos:', result.data);
                 result.data.forEach((insumo) => {
                     // Llenar lista_catalogos_search
                     const optionSearch = document.createElement('option');
                     optionSearch.value = insumo.id;
                     optionSearch.textContent = `${insumo.codigo} - ${insumo.nombre}`;
                     optionSearch.setAttribute('data-nombre', insumo.nombre);
-                    optionSearch.setAttribute('data-precio', insumo.precio);
+                    optionSearch.setAttribute('data-precio', insumo.precio_compra);
                     lista_insumos.appendChild(optionSearch);
                 });
                 initSelect2(lista_insumos);
@@ -881,7 +882,8 @@
         const nombre = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-nombre') || '';
         const cantidad = document.getElementById('cantidad').value;
         const descripcion = document.getElementById('descripcion').value;
-        const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
+        let precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
+        precio = document.getElementById('precio').value || 0;
         if (!producto || !nombre || !cantidad || !descripcion || !precio) {
             alert('Complete todos los campos de insumo.');
             return;

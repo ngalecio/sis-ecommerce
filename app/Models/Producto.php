@@ -43,10 +43,14 @@ class Producto extends Model
         'fecha_compra',
         'costo_promedio',
         'estado',
+        'unidad_medida',
+        'cantidad_por_unidad',
+        'stock_fraccion'
     ];
 
 protected $casts = [
     'precio_compra' => 'decimal:2',
+    'cantidad_por_unidad' => 'integer',
 ];
 
     public function categoria()

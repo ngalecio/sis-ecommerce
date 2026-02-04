@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ajuste;
+use App\Models\CatalogoDetalle;
 use App\Models\Categoria;
 use App\Models\Producto;
 use App\Models\ProductoImagen;
@@ -18,9 +19,10 @@ class ProductoController extends Controller
     public function listJsonInsumos()
     {
 
-        $productos = Producto::select('id', 'codigo', 'nombre', 'precio', 'stock')
+        $productos = Producto::select('id', 'codigo', 'nombre', 'precio', 'stock','precio_compra')
         ->where('tipo_producto', 'B')
         ->where('estado', 'A')
+        ->take(10)->orderBy('id','desc')
         ->get();
 
 
@@ -61,7 +63,8 @@ class ProductoController extends Controller
     {
         //
         $categorias = Categoria::all();
-        return view('admin.productos.create', compact('categorias'));
+        $unidades_medida = CatalogoDetalle::where('codigo_catalogo', 'UNIDAD_MEDIDA')->get();
+        return view('admin.productos.create', compact('categorias','unidades_medida'));
     }
 
     /**
@@ -102,6 +105,9 @@ class ProductoController extends Controller
             $producto->v_min = $request->precio;
             $producto->v_med = $request->precio;
             $producto->estado = $request->estado ?? 'A';
+            $producto->unidad_medida = $request->unidad_medida ?? 'UNIDAD';
+            $producto->cantidad_por_unidad = $request->cantidad_por_unidad ?? 1;
+            $producto->stock_fraccion = 0;
 
 
             if ($request->hasFile('imagen')) {
@@ -191,8 +197,9 @@ class ProductoController extends Controller
     {
         //
         $categorias = Categoria::all();
+        $unidades_medida = CatalogoDetalle::where('codigo_catalogo', 'UNIDAD_MEDIDA')->get();
         $producto = Producto::find($id);
-        return view('admin.productos.edit', compact('producto', 'categorias'));
+        return view('admin.productos.edit', compact('producto', 'categorias', 'unidades_medida'));
     }
 
     /**
@@ -229,6 +236,9 @@ class ProductoController extends Controller
             $producto->v_min = $request->precio;
             $producto->v_med = $request->precio;
             $producto->estado = $request->estado ?? 'A';
+            $producto->unidad_medida = $request->unidad_medida ?? 'UNIDAD';
+            $producto->cantidad_por_unidad = $request->cantidad_por_unidad ?? 1;
+            $producto->stock_fraccion = $request->stock_fraccion ?? 1;
 
             if ($request->hasFile('imagen')) {
                 if (isset($producto->imagen) && Storage::disk('public')->exists($producto->imagen)) {
