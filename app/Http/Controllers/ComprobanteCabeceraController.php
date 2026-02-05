@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\CatalogoDetalle;
 use App\Models\ComprobanteCabecera;
 use App\Models\ComprobanteDetalle;
+use App\Models\Kardex;
 use App\Models\Paciente;
 use App\Models\Producto;
 use App\Models\Secuencia;
@@ -153,6 +154,67 @@ class ComprobanteCabeceraController extends Controller
                     $detalleModel->subtotal = $detalle['total'];
                     $detalleModel->total = $detalle['total'];
                     $detalleModel->save();
+
+
+                    $producto = Producto::find($detalle['producto_id']);
+
+                    if ($producto) {
+
+
+                        $costo_anterior_fraccion = $producto->costo_promedio / $producto->cantidad_por_unidad;
+                        $stock_anterior_fraccion = $producto->stock_fraccion ?? 0;
+                        $costo_total_anterior_fraccion = $costo_anterior_fraccion * $stock_anterior_fraccion;
+
+
+                        // Actualizar el stock del producto sumando la cantidad comprada}
+                        $costo_anterior = $producto->costo_promedio ?? 0;
+                        $stock_anterior = $producto->stock ?? 0;
+                        $costo_total_anterior = $costo_anterior * $stock_anterior;
+
+                        $costo_total =  $costo_anterior * $detalle['cantidad'];
+                        $stock_nuevo = $producto->stock - $detalle['cantidad'];
+                        $nuevo_costo_promedio = $costo_anterior;
+                      //  $producto->costo_promedio = $nuevo_costo_promedio;
+                      //  $producto->precio_compra = $detalle['precio'];
+                        $producto->stock -= $detalle['cantidad'];
+                        $producto->save();
+
+                        $kardex = new Kardex();
+                        $fechaComprobante = $request->fecha ?? date('Y-m-d');
+                        $kardex->anio = date('Y', strtotime($fechaComprobante));
+                        $kardex->mes = date('m', strtotime($fechaComprobante));
+                        $kardex->fecha = $request->fecha;
+                        $kardex->fecha_hora = now();
+                        $kardex->producto_id = $producto->id;
+                        $kardex->establecimiento = $comprobanteCabecera->establecimiento;
+                        $kardex->tipo_movimiento = 'EG';
+                        $kardex->comprobante_id = $comprobanteCabecera->id;
+                        $kardex->comprobante_detalle_id = $detalleModel->id;
+                        $kardex->tipo_comprobante = $comprobanteCabecera->tipo_comprobante;
+                        $kardex->fecha_e = $request->fecha;
+                        $kardex->fecha_e = date('Ymd', strtotime($request->fecha));
+                        $kardex->ant_cantidad = $stock_anterior;
+                        $kardex->ant_costo = $costo_anterior;
+                        $kardex->ant_costo_total = $costo_total_anterior;
+                        $kardex->nue_cantidad = $detalle['cantidad'];
+                        $kardex->nue_costo = $costo_anterior;
+                        $kardex->nue_costo_total = $costo_anterior * $detalle['cantidad'];
+                        $kardex->act_cantidad =  $stock_nuevo;
+                        $kardex->act_costo = $nuevo_costo_promedio;
+                        $kardex->act_costo_total = $costo_total_anterior- $costo_total;
+
+                        $kardex->ant_cantidad_fraccion = $stock_anterior_fraccion;
+                        $kardex->ant_costo_fraccion = $costo_anterior_fraccion;
+                        $kardex->ant_costo_fraccion_total = $costo_total_anterior_fraccion;
+                        $kardex->nue_cantidad_fraccion = 0;
+                        $kardex->nue_costo_fraccion = $costo_anterior_fraccion;
+                        $kardex->nue_costo_fraccion_total = 0;
+                        $kardex->act_cantidad_fraccion =  $stock_anterior_fraccion;
+                        $kardex->act_costo_fraccion = $costo_anterior_fraccion;
+                        $kardex->act_costo_fraccion_total = $costo_total_anterior_fraccion;
+
+                        $kardex->save();
+                    }
                 }
             }
             DB::commit();
@@ -281,15 +343,80 @@ class ComprobanteCabeceraController extends Controller
                     $producto = Producto::find($detalle['producto_id']);
 
                     if ($producto) {
-                        // Actualizar el stock del producto sumando la cantidad comprada
-                        $costo_total = $detalle['precio'] * $detalle['cantidad'];
-                        $costo_total_anterior = ($producto->costo_promedio ?? 0) * ($producto->stock ?? 0);
-                        $stock=$producto->stock+$detalle['cantidad'];
-                        $nuevo_costo_promedio = ($costo_total_anterior + $costo_total) / $stock;
+                        // Actualizar el stock del producto sumando la cantidad comprada}
+                        $costo_anterior = $producto->costo_promedio ?? 0;
+                        $stock_anterior = $producto->stock ?? 0;
+                        $costo_total_anterior = $costo_anterior * $stock_anterior;
+
+                        $costo_anterior_fraccion = $producto->costo_promedio / $producto->cantidad_por_unidad;
+                        $stock_anterior_fraccion = $producto->stock_fraccion ?? 0;
+                        $costo_total_anterior_fraccion = $costo_anterior_fraccion * $stock_anterior_fraccion;
+
+
+
+
+
+
+
+                        $costo_total = $detalle['precio'] * $detalle['cantidad']; 
+                        $stock_nuevo = $producto->stock + $detalle['cantidad'];
+                        $nuevo_costo_promedio = ($costo_total_anterior + $costo_total) / $stock_nuevo;
                         $producto->costo_promedio = $nuevo_costo_promedio;
                         $producto->precio_compra = $detalle['precio'];
                         $producto->stock += $detalle['cantidad'];
-                        $producto->save();  
+                        $producto->save();
+
+
+
+                        if ($producto->unidad_medida != "UNIDAD") {
+
+                            $nuevo_costo_promedio_fraccion = $nuevo_costo_promedio / $producto->cantidad_por_unidad;
+                           
+                        } else {
+
+                            $nuevo_costo_promedio_fraccion=0;
+                        }
+                           
+
+
+
+                        $kardex = new Kardex();
+                        $fechaComprobante = $request->fecha ?? date('Y-m-d');
+                        $kardex->anio = date('Y', strtotime($fechaComprobante));
+                        $kardex->mes = date('m', strtotime($fechaComprobante));
+                        $kardex->fecha = $request->fecha;
+                        $kardex->fecha_hora = now();
+                        $kardex->producto_id = $producto->id;
+                        $kardex->establecimiento = $comprobanteCabecera->establecimiento;
+                        $kardex->tipo_movimiento = 'IN';
+                        $kardex->comprobante_id = $comprobanteCabecera->id;
+                        $kardex->comprobante_detalle_id = $detalleModel->id;
+                        $kardex->tipo_comprobante = $comprobanteCabecera->tipo_comprobante;
+                        $kardex->fecha_e = $request->fecha;
+                        $kardex->fecha_e = date('Ymd', strtotime($request->fecha));
+                        $kardex->ant_cantidad = $stock_anterior;
+                        $kardex->ant_costo = $costo_anterior;
+                        $kardex->ant_costo_total = $costo_total_anterior;
+                        $kardex->nue_cantidad = $detalle['cantidad'];
+                        $kardex->nue_costo = $detalle['precio'];
+                        $kardex->nue_costo_total = $detalle['precio'] * $detalle['cantidad'];
+                        $kardex->act_cantidad =  $stock_nuevo;
+                        $kardex->act_costo = $nuevo_costo_promedio;
+                        $kardex->act_costo_total = $costo_total_anterior + $costo_total;
+
+
+                            $kardex->ant_cantidad_fraccion = $stock_anterior_fraccion;
+                            $kardex->ant_costo_fraccion = $costo_anterior_fraccion;
+                            $kardex->ant_costo_fraccion_total = $costo_total_anterior_fraccion;
+                            $kardex->nue_cantidad_fraccion = 0;
+                            $kardex->nue_costo_fraccion = 0;
+                            $kardex->nue_costo_fraccion_total = 0;
+                            $kardex->act_cantidad_fraccion =  $producto->stock_fraccion;
+                            $kardex->act_costo_fraccion = $nuevo_costo_promedio_fraccion;
+                            $kardex->act_costo_fraccion_total = $nuevo_costo_promedio_fraccion * $producto->stock_fraccion;
+                        $kardex->save();
+
+ 
                     }
                 }
             }

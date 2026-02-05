@@ -5,6 +5,84 @@ alter table productos add cantidad_medida decimal(10,2)
 alter table productos add cantidad_por_unidad decimal(10,2) 
 alter table productos add stock_fraccion decimal(10,2)
 
+select * from categorias
+
+select * from comprobante_cabeceras
+
+update productos set cantidad_por_unidad = 1
+
+
+select * from consulta_detalles
+
+update productos set costo_promedio = 10.50 where id = 123;
+update productos set costo_promedio = 22.87 where id = 124;
+
+select * from clientes
+
+
+select id,nombre,stock,costo_promedio,unidad_medida,cantidad_por_unidad,stock_fraccion 
+from productos where id in (123,124,125)
+
+update productos set stock_fraccion = 0,stock = 150, costo_promedio = 24
+
+delete from kardexes;
+
+SELECT * FROm kardexes where producto_id in (125)
+
+
+
+
+
+alter table consulta_detalles add unidad_medida varchar(20)
+alter table consulta_detalles add precio_fraccion decimal(11,2)
+
+
+update productos set unidad_medida = 'UNIDAD'
+
+
+delete from pacientes where id <= 1700
+
+delete from clientes where id <= 1800
+
+select 
+
+delete from comprobante_cabeceras where year(fecha) <= 2024
+
+delete from comprobante_detalles where comprobante_id in (
+
+select id from comprobante_cabeceras where year(fecha) <= 2024)
+
+
+select * from productos where categoria_id != 11
+
+delete from productos where categoria_id != 11
+
+
+select * from producto_imagens
+
+see
+
+
+
+alter table kardexes add ant_cantidad_fraccion decimal(11,5)
+alter table kardexes add ant_costo_fraccion decimal(11,5)
+alter table kardexes add ant_costo_fraccion_total decimal(11,5)
+
+alter table kardexes add nue_cantidad_fraccion decimal(11,5);
+alter table kardexes add nue_costo_fraccion decimal(11,5);
+alter table kardexes add nue_costo_fraccion_total decimal(11,5);
+
+
+alter table kardexes add act_cantidad_fraccion decimal(11,5);
+alter table kardexes add act_costo_fraccion decimal(11,5);
+alter table kardexes add act_costo_fraccion_total decimal(11,5);
+
+select * from kardexes
+
+SELECT * From productos where id = 123
+
+select 268*209.17626;
+
 http://vmi1057060.contaboserver.net:9090/jasperserver/rest_v2/reports/reports/strada/crm_lista_precios.pdf?&j_username=jasperadmin&j_password=Todotek.2023@**&id_empresa=1&filtro=&campofiltro=PERSONALIZADO&marca=GM
 
 select * from comprobante_cabeceras where tipo_comprobante = 'CO'

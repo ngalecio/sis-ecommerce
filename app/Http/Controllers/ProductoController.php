@@ -19,10 +19,20 @@ class ProductoController extends Controller
     public function listJsonInsumos()
     {
 
-        $productos = Producto::select('id', 'codigo', 'nombre', 'precio', 'stock','precio_compra')
+        $productos = Producto::select(
+            'id',
+            'codigo',
+            'nombre',
+            'precio',
+            'stock',
+            'precio_compra',
+            'unidad_medida',
+            'cantidad_por_unidad',
+            'stock_fraccion'
+        )
         ->where('tipo_producto', 'B')
         ->where('estado', 'A')
-        ->take(10)->orderBy('id','desc')
+     //   ->take(10)->orderBy('id','desc')
         ->get();
 
 
@@ -189,6 +199,15 @@ class ProductoController extends Controller
         $producto = Producto::find($id);
         return view('admin.productos.imagenes', compact('producto'));
     }
+
+
+    public function kardex(string $id)
+    {
+        //
+        $producto = Producto::find($id);
+        return view('admin.productos.kardex', compact('producto'));
+    }
+
 
     /**
      * Show the form for editing the specified resource.

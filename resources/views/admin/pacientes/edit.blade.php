@@ -53,13 +53,11 @@
                                         </a>
 
                                         <button type="button" class="btn btn-primary"
-                                            style="float: right; margin-left: 10px;" 
-                                            onclick="reporte_ficha_pdf()">
+                                            style="float: right; margin-left: 10px;" onclick="reporte_ficha_pdf()">
                                             <i class="bi bi-person-plus"></i> PDF FICHA
                                         </button>
                                         <button type="button" class="btn btn-primary"
-                                            style="float: right; margin-left: 10px;" 
-                                            onclick="reporte_todos_pdf()">
+                                            style="float: right; margin-left: 10px;" onclick="reporte_todos_pdf()">
                                             <i class="bi bi-person-plus"></i> PDF TODOS
                                         </button>
 
@@ -450,7 +448,7 @@
                                                     </h5>
                                                 </div>
                                                 <div class="row">
-                                                    <div class="col-md-4">
+                                                    <div class="col-md-3">
                                                         <div class="form-group">
                                                             <label for="producto" class="form-label">Producto</label>
                                                             <div class="input-group">
@@ -480,13 +478,14 @@
                                                     </div>
                                                     <div class="col-md-2">
                                                         <div class="form-group">
-                                                            <label for="descripcion"
-                                                                class="form-label">Descripción</label>
+                                                            <label for="unidad_medida" class="form-label">Unidad
+                                                                Medida</label>
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i
                                                                         class="bi bi-card-text"></i></span>
-                                                                <input type="text" class="form-control" id="descripcion"
-                                                                    name="descripcion" placeholder="Descripción">
+                                                                <input type="text" class="form-control"
+                                                                    id="unidad_medida" name="unidad_medida"
+                                                                    placeholder="Unidad Medida" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -502,7 +501,20 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-2 d-flex align-items-start">
+
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label for="precio_fraccion" class="form-label">Precio por Fraccion</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i
+                                                                        class="bi bi-currency-dollar"></i></span>
+                                                                <input type="number" step="0.01" class="form-control"
+                                                                    id="precio_fraccion" name="precio_fraccion" placeholder="Precio por Fraccion"
+                                                                    disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-1 d-flex align-items-start">
                                                         <div class="form-group w-100">
                                                             <label class="form-label"
                                                                 style="visibility:hidden;">&nbsp;</label>
@@ -524,8 +536,9 @@
                                                                     <th>Producto</th>
                                                                     <th>Nombre</th>
                                                                     <th>Cantidad</th>
-                                                                    <th>Descripción</th>
+                                                                    <th>Unidad de Medida</th>
                                                                     <th>Precio</th>
+                                                                    <th>Precio por Fraccion</th>
                                                                     <th>Total</th>
                                                                     <th class="text-center">Acciones</th>
                                                                 </tr>
@@ -542,11 +555,11 @@
                                                     <div class="col-md-4 offset-md-8">
                                                         <div class="d-flex flex-column align-items-end">
                                                             <div class="mb-1">
-                                                                <label class="fw-bold">Total: </label>
+                                                                <label id="lbl_subtotal_impuesto" class="fw-bold">SubTotal: </label>
                                                                 <span id="insumos-total" class="ms-2">0.00</span>
                                                             </div>
                                                             <div class="mb-1">
-                                                                <label class="fw-bold">IVA (12%): </label>
+                                                                <label id="lbl_iva" class="fw-bold">IVA (15%): </label>
                                                                 <span id="insumos-iva" class="ms-2">0.00</span>
                                                             </div>
                                                             <div>
@@ -978,7 +991,7 @@
 
     function reporte_ficha_pdf2() {
         // Mostrar loading
-              const id_paciente = document.getElementById('id-paciente').value || '0';
+        const id_paciente = document.getElementById('id-paciente').value || '0';
         if (!id_paciente || id_paciente === '0') {
             alert('El paciente debe estar registrado para generar el PDF.');
             return;
@@ -991,18 +1004,18 @@
         }
 
 
-        
+
         const data = {
-        
+
             id: id_paciente
         }
 
         fetch("{{ route('admin.pacientes.reportepdf') }}", {
             method: "POST",
             headers: {
-            "X-CSRF-TOKEN": '{{ csrf_token() }}',
-            "Accept": "application/pdf",
-            "Content-Type": "application/json"
+                "X-CSRF-TOKEN": '{{ csrf_token() }}',
+                "Accept": "application/pdf",
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(data)
         })
@@ -1046,7 +1059,7 @@
 
 
 
-                    const url2 = window.URL.createObjectURL(blob);
+                const url2 = window.URL.createObjectURL(blob);
                 const nombreArchivo = 'Reporte-Pacientes-' + new Date().toLocaleDateString() + '.pdf';
 
                 // 1. Abrir una nueva ventana en blanco
@@ -1139,8 +1152,13 @@
     function actualizarPrecioInsumo() {
         const productoSelect = document.getElementById('id-productos-insumos');
         const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
+        const unidad_medida = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-unidad-medida') || '';
+        const cantidad_por_unidad = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-cantidad-por-unidad') || '';
+        
+        const precio_fraccion =precio/cantidad_por_unidad;
 
-
+        document.getElementById('unidad_medida').value = unidad_medida;
+           document.getElementById('precio_fraccion').value = parseFloat(precio_fraccion).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         if (precio) {
             document.getElementById('precio').value = parseFloat(precio).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         } else {
@@ -1189,6 +1207,8 @@
                     optionSearch.textContent = `${insumo.codigo} - ${insumo.nombre}`;
                     optionSearch.setAttribute('data-nombre', insumo.nombre);
                     optionSearch.setAttribute('data-precio', insumo.precio);
+                    optionSearch.setAttribute('data-unidad-medida', insumo.unidad_medida);
+                    optionSearch.setAttribute('data-cantidad-por-unidad', insumo.cantidad_por_unidad || '1');
                     lista_insumos.appendChild(optionSearch);
 
 
@@ -1251,16 +1271,23 @@
 
     // Array para almacenar los insumos agregados
     let insumosDetalle = [];
-
+    let porcentajeIva = 0.15;
+      let subtototalIva = 0;
+        let subtotalCero = 0;
+        let descuento = 0;
+        let iva = 0;
+        let totalIva = 0;
+        let ice = 0;
     function agregarInsumo() {
         const productoSelect = document.getElementById('id-productos-insumos');
         const producto = productoSelect.value;
         const nombre = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-nombre') || '';
         const cantidad = document.getElementById('cantidad').value;
-        const descripcion = document.getElementById('descripcion').value;
+        const unidad_medida = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-unidad-medida') || '';
         const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
+         const precio_fraccion= document.getElementById('precio_fraccion').value;
 
-        if (!producto || !nombre || !cantidad || !descripcion || !precio) {
+        if (!producto || !nombre || !cantidad || !unidad_medida || !precio) {
             alert('Complete todos los campos de insumo.');
             return;
         }
@@ -1270,9 +1297,10 @@
             producto_id: producto,
             nombre: nombre,
             cantidad: parseFloat(cantidad),
-            descripcion,
+            unidad_medida: unidad_medida,
             precio: parseFloat(precio),
-            total: parseFloat(precio) * parseFloat(cantidad)
+            precio_fraccion: parseFloat(precio_fraccion),
+            total: parseFloat(precio_fraccion) * parseFloat(cantidad)
         });
 
         renderizarInsumos();
@@ -1285,7 +1313,7 @@
 
         // document.getElementById('nombre').value = '';
         document.getElementById('cantidad').value = '';
-        document.getElementById('descripcion').value = '';
+        document.getElementById('unidad_medida').value = '';
         document.getElementById('precio').value = '';
     }
 
@@ -1306,9 +1334,10 @@
                         style="width:80px"
                         onblur="actualizarCantidadInsumo(${idx}, this.value)">
                 </td>
-                <td>${insumo.descripcion}</td>
+                <td>${insumo.unidad_medida}</td>
                 <td class="text-end">$ ${insumo.precio.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
-                <td class="text-end">$ ${(insumo.precio * insumo.cantidad).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                <td class="text-end">$ ${insumo.precio_fraccion.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                <td class="text-end">$ ${(insumo.total).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
                 <td class="text-center">
                     <button type="button" class="btn btn-sm btn-danger" onclick="eliminarInsumo(${idx});">
                         <i class="bi bi-trash"></i>
@@ -1319,14 +1348,24 @@
         });
 
 
+        subtototalIva = 0;
+        subtotalCero = 0;
+        descuento = 0;
+        iva = 0;
+        totalIva = 0;
+        ice = 0;
+
 
         let total = 0;
         insumosDetalle.forEach(insumo => {
-            total += (insumo.cantidad || 0) * (insumo.precio || 0);
+            subtototalIva += (insumo.cantidad || 0) * (insumo.precio_fraccion || 0);
         });
-        const iva = total * 0.12;
-        const totalIva = total + iva;
-        document.getElementById('insumos-total').textContent = '$' + total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        iva = subtototalIva * porcentajeIva;
+        totalIva = subtototalIva + iva;
+
+      
+        document.getElementById('insumos-total').textContent = '$' + subtototalIva.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         document.getElementById('insumos-total').style.textAlign = 'right';
         document.getElementById('insumos-iva').textContent = '$' + iva.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         document.getElementById('insumos-iva').style.textAlign = 'right';
@@ -1506,6 +1545,11 @@
 
         document.getElementById('fecha-desde').value = f_fecha_desde_mes();
         document.getElementById('fecha-hasta').value = f_fecha_hasta_mes();
+        let porcentajeIva = 0.15;
+        // Actualizar el label de subtotal con el porcentaje de IVA
+        document.getElementById('lbl_subtotal_impuesto').textContent = 'Subtotal ' + (porcentajeIva * 100) + '%';
+        document.getElementById('lbl_iva').textContent = 'IVA (' + (porcentajeIva * 100) + '%): ';
+
         nueva_cita();
         // const url = window.location.pathname;
         // // Extraer el parámetro uno antes del final
@@ -1530,13 +1574,13 @@
 
 
         tbody.innerHTML = '<tr><td colspan="10">Cargando...</td></tr>';
-        console.log('Cargando citas con los parámetros:', {
-            search_citas,
-            page,
-            id_paciente,
-            fecha_desde,
-            fecha_hasta
-        });
+        // console.log('Cargando citas con los parámetros:', {
+        //     search_citas,
+        //     page,
+        //     id_paciente,
+        //     fecha_desde,
+        //     fecha_hasta
+        // });
         let url = `/admin/consultas/list?search=${encodeURIComponent(search_citas)}&paciente_id=${encodeURIComponent(id_paciente)}&page=${page}&fecha_desde=${encodeURIComponent(fecha_desde)}&fecha_hasta=${encodeURIComponent(fecha_hasta)}`;
         try {
             const response = await fetch(url);
@@ -1740,12 +1784,16 @@
                                 cantidad: detalle.cantidad,
                                 descripcion: detalle.descripcion,
                                 precio: detalle.precio,
-                                total: detalle.total
+                                total: detalle.total,
+                                unidad_medida: detalle.unidad_medida,
+                                precio_fraccion: detalle.precio_fraccion
                             });
                         });
                     } else {
                         insumosDetalle = [];
                     }
+                    console.log('Insumos detalle cargados:', insumosDetalle);
+                    console.log('Insumos detalle cargados (JSON):', JSON.stringify(insumosDetalle));
                     renderizarInsumos();
 
                     // Cambiar el tab actual a "paciente-consulta"

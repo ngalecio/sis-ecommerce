@@ -16,6 +16,8 @@ class ConsultaDetalle extends Model
         'precio',
         'total',
         'producto_id',
+        'unidad_medida',
+        'precio_fraccion',
     ];
 
     public function consulta()

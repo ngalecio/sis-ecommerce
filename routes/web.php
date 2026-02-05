@@ -109,6 +109,8 @@ Route::delete('/admin/productos/delete/{id}', [ProductoController::class, 'destr
 Route::post('/admin/productos/{id}/restore', [ProductoController::class, 'restore'])->name('admin.productos.restore')->middleware('auth');
 
 Route::get('/admin/productos/{id}/imagenes', [ProductoController::class, 'imagenes'])->name('admin.productos.imagenes')->middleware('auth');
+Route::get('/admin/productos/{id}/kardex', [ProductoController::class, 'kardex'])->name('admin.productos.kardex')->middleware('auth');
+
 Route::post('/admin/productos/{id}/upload_imagen', [ProductoController::class, 'upload_imagen'])->name('admin.productos.upload_imagen')->middleware('auth');
 Route::delete('/admin/productos/{id}/remove_imagen', [ProductoController::class, 'remove_imagen'])->name('admin.productos.remove_imagen')->middleware('auth');
 

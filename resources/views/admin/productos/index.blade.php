@@ -50,49 +50,56 @@
                                 <td>{{ $producto->nombre }}</td>
                                 <td>{{ $producto->codigo }}</td>
                                 <td>{{ $producto->categoria->nombre ?? 'Sin categoría' }}</td>
-                                <td>{{ $ajuste->divisa . ' ' . number_format($producto->precio_compra, 2, '.', ',') }}</td>
+                                <td>{{ $ajuste->divisa . ' ' . number_format($producto->precio_compra, 2, '.', ',') }}
+                                </td>
                                 <td>{{ $ajuste->divisa . ' ' . number_format($producto->precio, 2, '.', ',') }}</td>
                                 <td>{{ $producto->stock }}</td>
-                                
+
                                 <td>
                                     @if($producto->tipo_producto == 'B')
-                                        BIEN
+                                    BIEN
                                     @elseif($producto->tipo_producto == 'S')
-                                        SERVICIO
+                                    SERVICIO
                                     @elseif($producto->tipo_producto == 'O')
-                                        OBSEQUIO
+                                    OBSEQUIO
                                     @elseif($producto->tipo_producto == 'I')
-                                        INSUMO
+                                    INSUMO
                                     @else
-                                        {{ $producto->tipo_producto }}
+                                    {{ $producto->tipo_producto }}
                                     @endif
                                 </td>
                                 <td>{{ $producto->aplica_iva ? 'Sí' : 'No' }}</td>
                                 <td class="text-center">
                                     @if($producto->estado == 'A')
-                                        <span class="text-success">
-                                            <i class="bi bi-check-circle-fill" style="font-size: 1.5rem;"></i>
-                                        </span>
+                                    <span class="text-success">
+                                        <i class="bi bi-check-circle-fill" style="font-size: 1.5rem;"></i>
+                                    </span>
                                     @else
-                                        <span class="text-danger">
-                                            <i class="bi bi-dash-circle-fill" style="font-size: 1.5rem;"></i>
-                                        </span>
+                                    <span class="text-danger">
+                                        <i class="bi bi-dash-circle-fill" style="font-size: 1.5rem;"></i>
+                                    </span>
                                     @endif
                                 </td>
 
-                            <td class="text-center" style="white-space: nowrap; vertical-align: middle;">
-                                    
-                                    <!-- Aquí puedes agregar botones para editar o eliminar el rol -->
-     
+                                <td class="text-center" style="white-space: nowrap; vertical-align: middle;">
 
-                                    <a href="{{ url('/admin/productos/'.$producto->id.'/imagenes') }}"
+                                    <!-- Aquí puedes agregar botones para editar o eliminar el rol -->
+
+
+                                    <!-- <a href="{{ url('/admin/productos/'.$producto->id.'/imagenes') }}"
                                         class="btn btn-sm btn-warning ">
 
                                     <i class="bi bi-images"></i>
+                                    </a> -->
+                                    <a href="{{ url('/admin/productos/'.$producto->id.'/kardex') }}"
+                                        class="btn btn-sm btn-warning ">
+
+                                    
+                                    <i class="bi bi-journal-text"></i>
                                     </a>
                                     <a href="{{ url('/admin/productos/'.$producto->id.'/edit') }}"
                                         class="btn btn-sm btn-success "><i class="bi bi-pencil"></i>
-                                        
+
                                     </a>
 
                                     <form action="{{ url('/admin/productos/delete/'.$producto->id) }}" method="POST"
