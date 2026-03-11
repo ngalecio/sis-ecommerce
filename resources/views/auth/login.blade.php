@@ -43,7 +43,7 @@
                     </div>
                 <br>
                 <br>
-                    <p class="auth-subtitle mb-5">Ingreso al Sistema</p>
+                    <p class="auth-subtitle mb-5">Ingreso al Sistema(v2)</p>
 
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
