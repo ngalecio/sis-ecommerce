@@ -7,34 +7,67 @@
 
             <div class="card-header">
                 <h4>Productos Registrados
-                    <a href="{{ url('/admin/productos/create') }}" style="float: right;" class="btn btn-primary">
+                    <a href="{{ url('/admin/productos/create') }}" style="float: right; margin-left: 10px;" class="btn btn-primary">
                         <i class="bi bi-plus"></i> Crear Nuevo</a>
+
+                    <button id="btn-crear-pdf" type="button" class="btn btn-primary" style="float: right; margin-left: 10px;" onclick="reporte_productos_pdf()">
+                        <i class="bi bi-file-earmark-pdf"></i> PDF
+                    </button>
+
+
+                
+
                 </h4>
 
                 <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <form action="{{ url('/admin/productos') }}" method="GET">
-                                <div class="input-group">
-                                    <input type="text" name="search" class="form-control"
-                                        placeholder="Buscar producto..." value="{{ request('search') }}">
-                                    <button type="submit" class="btn btn-primary">Buscar</button>
+                    <form action="{{ url('/admin/productos') }}" method="GET">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="estado">Estado</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-funnel"></i></span>
+                                        <select id="estado" name="estado" class="form-select">
+                                            <option value="" {{ request('estado')=='' ? 'selected' : '' }}>Todos
+                                            </option>
+                                            <option value="A" {{ request('estado')=='A' ? 'selected' : '' }}>Activo
+                                            </option>
+                                            <option value="I" {{ request('estado')=='I' ? 'selected' : '' }}>Inactivo
+                                            </option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+                                    <label for="search">Texto a Buscar (*)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-box-seam"></i></span>
+                                        <input type="text" id="search" name="search" class="form-control"
+                                            value="{{ $buscar ?? request('search') }}" placeholder="Buscar producto...">
+                                        <button id="btn-buscar-citas" type="submit" class="btn btn-primary">
+                                            <i class="bi bi-search"></i>Buscar</button>
+                                    </div>
                                 </div>
 
-                            </form>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                     <table class="table table-bordered table-hover table-striped">
                         <thead>
                             <tr>
                                 <th>#</th>
                                 <th>Id</th>
                                 <th>Producto</th>
-                                <th>Codigo</th>
+
                                 <th>Categoria</th>
+                                <th>Unidad Medida</th>
                                 <th>Precio Compra</th>
                                 <th>Precio Venta</th>
                                 <th>Stock</th>
+                                <th>Stock Fracción</th>
                                 <th>Tipo de Producto</th>
                                 <th>Aplica Iva</th>
                                 <th>Estado</th>
@@ -48,13 +81,26 @@
                                 <td>{{ ($productos->currentPage() -1)*$productos->perPage()+$loop->iteration }}</td>
                                 <td>{{ $producto->id }}</td>
                                 <td>{{ $producto->nombre }}</td>
-                                <td>{{ $producto->codigo }}</td>
+
                                 <td>{{ $producto->categoria->nombre ?? 'Sin categoría' }}</td>
+                                <td>
+                                    @if(($producto->unidad_medida ?? '') !== 'UNIDAD')
+                                    {{ number_format($producto->cantidad_por_unidad ?? 0, 0, '.', ',') }} {{
+                                    $producto->unidad_medida ?? 'Sin unidad' }}
+                                    @else
+                                    {{ $producto->unidad_medida ?? 'Sin unidad' }}
+                                    @endif
+                                </td>
                                 <td>{{ $ajuste->divisa . ' ' . number_format($producto->precio_compra, 2, '.', ',') }}
                                 </td>
                                 <td>{{ $ajuste->divisa . ' ' . number_format($producto->precio, 2, '.', ',') }}</td>
-                                <td>{{ $producto->stock }}</td>
-
+                                <td>{{ number_format($producto->stock, 0, '.', ',') }}</td>
+                                <td>
+                                    {{ $producto->stock_fraccion == 0
+                                    ? '-'
+                                    : number_format($producto->stock_fraccion, 0, '.', ',') . ' ' .
+                                    ($producto->unidad_medida ?? '') }}
+                                </td>
                                 <td>
                                     @if($producto->tipo_producto == 'B')
                                     BIEN
@@ -94,8 +140,8 @@
                                     <a href="{{ url('/admin/productos/'.$producto->id.'/kardex') }}"
                                         class="btn btn-sm btn-warning ">
 
-                                    
-                                    <i class="bi bi-journal-text"></i>
+
+                                        <i class="bi bi-journal-text"></i>
                                     </a>
                                     <a href="{{ url('/admin/productos/'.$producto->id.'/edit') }}"
                                         class="btn btn-sm btn-success "><i class="bi bi-pencil"></i>
@@ -160,3 +206,20 @@
     </div>
 
     @endsection
+
+    @push('scripts')
+    <script>
+
+
+        function reporte_productos_pdf() {
+            const estado = document.getElementById('estado').value;
+            const search = document.getElementById('search').value;
+            // console.log('Generando reporte PDF con estado:', estado, 'y búsqueda:', search);
+     
+
+            const url = `{{ url('/admin/productos/reportepdf') }}?estado=${encodeURIComponent(estado)}&search=${encodeURIComponent(search)}`;
+            window.open(url, '_blank');
+
+        }
+    </script>
+    @endpush

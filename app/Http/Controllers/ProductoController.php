@@ -5,10 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Ajuste;
 use App\Models\CatalogoDetalle;
 use App\Models\Categoria;
+use App\Models\Kardex;
 use App\Models\Producto;
 use App\Models\ProductoImagen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class ProductoController extends Controller
 {
@@ -42,23 +45,226 @@ class ProductoController extends Controller
         ]);
     }
 
+    public function reportepdf(Request $request)
+    {
+        $estado = $request->get('estado');
+        $search = $request->get('search');
+    
+        $ajuste= Ajuste::first();
+        // return "Reporte PDF - Estado: $estado, Search: $search";
+        $query = Producto::query();
+    
+
+        $query->select(
+            'id',
+            'codigo',
+            'nombre',
+            'descripcion',
+            'lote',
+            'categoria_id',
+            'presentacion_id',
+            'imagen',
+            'lote_estandar',
+            'registro_sanitario',
+            'tipo_receta',
+            'version',
+            'stock',
+            'precio',
+            'costo',
+            'imprime_receta',
+            'tipo_producto',
+            'aplica_iva',
+            'aplica_ice',
+            'provedor_id',
+            'porcentaje_ice',
+            'tipo_contribuyente',
+            'presentacion',
+            'v_min',
+            'v_max',
+            'v_med',
+            'prescripcion',
+            'id_producto',
+            'precio_compra',
+            'fecha_compra',
+            'costo_promedio',
+            'estado',
+            'unidad_medida',
+            'cantidad_por_unidad',
+            'stock_fraccion'
+        );
+        if ($estado && $estado != '') {
+            $query->where('estado', $estado);
+        }
+        if ($search && $search != '') {
+            $query->where('nombre', 'like', '%' . $search . '%');
+        }
+        $productos = $query->orderBy('nombre', 'asc')->get();
+
+        $pdf = Pdf::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'DejaVu Sans',
+            'isPhpEnabled' => true // IMPORTANTE: Habilitar PHP en DOMPDF
+        ]);
+
+        $pdf->loadView('admin.productos.reportepdf', compact('productos', 'ajuste'));
+        $pdf->setPaper('a4', 'landscape');
+
+        $nombreArchivo = 'rpt_producto_' . now()->format('Ymd_His') . '.pdf';
+
+        return $pdf->stream($nombreArchivo);
+    }
+    public function reporteKardex($id_producto, $fecha_desde, $fecha_hasta)
+    {
+        $query = Kardex::query();
+        $productoId = $id_producto;
+        $producto = Producto::find($productoId);
+        $ajuste = Ajuste::first();
+        $query->select(
+            'id',
+            'anio',
+            'mes',
+            'fecha',
+            'fecha_hora',
+            'producto_id',
+            'establecimiento',
+            'tipo_movimiento',
+            'comprobante_id',
+            'comprobante_detalle_id',
+            'tipo_comprobante',
+            'fecha_e',
+            'ant_cantidad',
+            'ant_costo',
+            'ant_costo_total',
+            'nue_cantidad',
+            'nue_costo',
+            'nue_costo_total',
+            'act_cantidad',
+            'act_costo',
+            'act_costo_total'
+        )->where('producto_id', $productoId);
+        if ($fecha_desde && $fecha_hasta) {
+            $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+        }
+        $kardex = $query->orderBy('fecha_hora', 'asc')->get();
+
+        $pdf = Pdf::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'DejaVu Sans',
+            'isPhpEnabled' => true // IMPORTANTE: Habilitar PHP en DOMPDF
+        ]);
+
+        $pdf->loadView('admin.productos.reportekardex', compact('kardex', 'producto', 'ajuste'));
+        $pdf->setPaper('a4', 'landscape');
+
+        $nombreArchivo = 'rpt_kardex_' . now()->format('Ymd_His') . '.pdf';
+
+        return $pdf->stream($nombreArchivo);
+    }
+    public function listJsonKardex(Request $request)
+    {
+
+
+
+
+
+
+        try {
+            $buscar = $request->get('search');
+            $fecha_desde = $request->get('fecha_desde');
+            $fecha_hasta = $request->get('fecha_hasta');
+            $productoId = $request->get('producto_id');
+
+            $query = Kardex::query();
+            $query->select(
+                'id',
+                'anio',
+                'mes',
+                'fecha',
+                'fecha_hora',
+                'producto_id',
+                'establecimiento',
+                'tipo_movimiento',
+                'comprobante_id',
+                'comprobante_detalle_id',
+                'tipo_comprobante',
+                'fecha_e',
+                'ant_cantidad',
+                'ant_costo',
+                'ant_costo_total',
+                'nue_cantidad',
+                'nue_costo',
+                'nue_costo_total',
+                'act_cantidad',
+                'act_costo',
+                'act_costo_total'
+            )->with('producto:id,nombre,codigo');
+
+            // if ($buscar) {
+            //     $query->where(function ($q) use ($buscar) {
+            //         $q->where('alergias', 'like', '%' . $buscar . '%')
+            //             ->orWhere('medicamentos', 'like', '%' . $buscar . '%')
+            //             ->orWhere('tipo_consulta', 'like', '%' . $buscar . '%')
+
+            //             ->orWhere('antecedentes_personales', 'like', '%' . $buscar . '%')
+            //             ->orWhere('antecedentes_familiares', 'like', '%' . $buscar . '%')
+            //             ->orWhere('comentario_1', 'like', '%' . $buscar . '%')
+            //             ->orWhere('comentario_2', 'like', '%' . $buscar . '%')
+            //             ->orWhere('comentario_3', 'like', '%' . $buscar . '%')
+            //             ->orWhere('comentario_4', 'like', '%' . $buscar . '%');
+            //     });
+            // }
+
+            if ($productoId) {
+                $query->where('producto_id', $productoId);
+            }
+
+            if ($fecha_desde && $fecha_hasta) {
+                $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+            }
+            $query->orderBy('fecha_hora', 'asc');
+            $consultas = $query->paginate(ENV('PAGINATE_SIZE', 10));
+
+            return response()->json([
+                'data' => $consultas->items(),
+                'current_page' => $consultas->currentPage(),
+                'last_page' => $consultas->lastPage(),
+                'from' => $consultas->firstItem(),
+                'to' => $consultas->lastItem(),
+                'total' => $consultas->total(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al obtener las consultas.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function index(Request $request)
     {
         $ajuste= Ajuste::first();
         $buscar = $request->get('search');
+        $estado = $request->get('estado');
         $query = Producto::query();
         $query->select('id', 'categoria_id', 'nombre', 'codigo', 'descripcion', 'precio', 'precio_compra'
         , 'stock', 'imagen', 'prescripcion', 'presentacion'
         , 'imprime_receta', 'aplica_iva'
-        , 'tipo_producto', 'v_max', 'v_min', 'v_med', 'estado')
+        , 'tipo_producto', 'v_max', 'v_min', 'v_med', 'estado','unidad_medida','cantidad_por_unidad','stock_fraccion')
             ->with('categoria');
         if ($buscar) {
-            $query->where('nombre', 'like', '%' . $buscar . '%')
-                ->orWhere('codigo', 'like', '%' . $buscar . '%')
-                ->orWhere('descripcion', 'like', '%' . $buscar . '%')
-                ;
+            $query->where(function ($q) use ($buscar) {
+                $q->where('nombre', 'like', '%' . $buscar . '%')
+                    ->orWhere('codigo', 'like', '%' . $buscar . '%')
+                    ->orWhere('descripcion', 'like', '%' . $buscar . '%');
+            });
         }
 
+        if ($estado) {
+            $query->where('estado', $estado);
+        }
 
 
 

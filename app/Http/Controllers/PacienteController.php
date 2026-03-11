@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ajuste;
 use App\Models\Paciente;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
@@ -48,6 +49,8 @@ class PacienteController extends Controller
     public function reporte(String $id)
     {
         //
+        $ajuste = Ajuste::first();
+
         $paciente = Paciente::findOrFail($id);
         $pdf = Pdf::setOptions([
             'isHtml5ParserEnabled' => true,
@@ -59,7 +62,7 @@ class PacienteController extends Controller
         // $pdf->setPaper('a4', 'portrait');
         // return $pdf->stream('reporte_paciente_'.$id.'.pdf');
 
-        $pdf->loadView('admin.pacientes.reporteficha', compact('paciente'));
+        $pdf->loadView('admin.pacientes.reporteficha', compact('paciente', 'ajuste'));
         $pdf->setPaper('a4', 'portrait');
 
         $nombreArchivo = 'ficha-medica-' . ($paciente->cedula ?? $paciente->id) . '.pdf';
@@ -71,6 +74,7 @@ class PacienteController extends Controller
     public function reportePDF(Request $request)
     {
         $id = $request->get('id');
+        $ajuste = Ajuste::first();
         
         $paciente = Paciente::findOrFail($id);
         $pdf = Pdf::setOptions([
@@ -83,7 +87,7 @@ class PacienteController extends Controller
         // $pdf->setPaper('a4', 'portrait');
         // return $pdf->stream('reporte_paciente_'.$id.'.pdf');
 
-        $pdf->loadView('admin.pacientes.reporteficha', compact('paciente'));
+        $pdf->loadView('admin.pacientes.reporteficha', compact('paciente', 'ajuste'));
         $pdf->setPaper('a4', 'portrait');
 
         $nombreArchivo = 'ficha-medica-' . ($paciente->cedula ?? $paciente->id) . '.pdf';
@@ -95,7 +99,7 @@ class PacienteController extends Controller
     public function reporteTodos(Request $request)
     {
 
-
+        $ajuste = Ajuste::first();
 
         $pacientes = Paciente::selectRaw("
             id,
@@ -117,7 +121,7 @@ class PacienteController extends Controller
             'isPhpEnabled' => true // IMPORTANTE: Habilitar PHP en DOMPDF
         ]);
 
-        $pdf->loadView('admin.pacientes.reportetodos', compact('pacientes'));
+        $pdf->loadView('admin.pacientes.reportetodos', compact('pacientes', 'ajuste'));
         $pdf->setPaper('a4', 'landscape');
 
         $nombreArchivo = 'rpt_pacientes_' . now()->format('Ymd_His') . '.pdf';

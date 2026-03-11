@@ -56,10 +56,10 @@
                                             style="float: right; margin-left: 10px;" onclick="reporte_ficha_pdf()">
                                             <i class="bi bi-person-plus"></i> PDF FICHA
                                         </button>
-                                        <button type="button" class="btn btn-primary"
+                                        <!-- <button type="button" class="btn btn-primary"
                                             style="float: right; margin-left: 10px;" onclick="reporte_todos_pdf()">
                                             <i class="bi bi-person-plus"></i> PDF TODOS
-                                        </button>
+                                        </button> -->
 
                                         <!-- <a class="btn btn-primary"
                                             @if(isset($paciente->id) && $paciente->id)

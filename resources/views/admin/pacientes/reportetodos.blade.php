@@ -44,22 +44,16 @@
 <body>
     <div class="container">
         <!-- ENCABEZADO -->
-        <table>
-            <thead>
-
-            </thead>
-
-        </table>
         <!-- TABLA DE PACIENTES -->
         <table>
             <thead>
                 <tr>
                     <th colspan="10" style="text-align:center; background:#fff;">
                         <span style="font-size:18px; font-weight:bold; color:#2d2d2d; letter-spacing:2px; text-transform:uppercase;">
-                            CENTRO MÉDICO
+                            {{ $ajuste->nombre ?? 'Nombre de la Empresa' }}
                         </span><br>
                         <span style="font-size:10px; color:#555; margin-top:5px;">
-                            Sistema de Gestión de Pacientes
+                            {{ $ajuste->descripcion ?? 'Sistema de Gestion' }}
                         </span>
                     </th>
                 </tr>
@@ -128,23 +122,15 @@
         </div>
     </div>
     <script type="text/php">
-            if (isset($pdf)) {
-                $text = "Página {PAGE_NUM} de {PAGE_COUNT}";
-                $font = $fontMetrics->getFont("DejaVu Sans");
-                $size = 9;
-                $color = array(0.5, 0.5, 0.5);
-                
-                // Posición: x, y (desde abajo a la derecha)
-                $pdf->page_text(720, 565, $text, $font, $size, $color);
-                
-                // Opcional: Agregar el nombre del documento en el pie
-                $pdf->page_text(30, 565, "Reporte de Pacientes", $font, $size, $color);
-            }
-        </script>
+        if (isset($pdf)) {
+            $text = "Página {PAGE_NUM} de {PAGE_COUNT}";
+            $font = $fontMetrics->getFont("DejaVu Sans");
+            $size = 9;
+            $color = array(0.5, 0.5, 0.5);
+            // Ajustar posición para evitar área fuera de impresión (A4: 0-595 x 0-842 pt aprox)
+            $pdf->page_text(500, 820, $text, $font, $size, $color); // Derecha abajo
+            $pdf->page_text(30, 820, "Reporte de Pacientes", $font, $size, $color); // Izquierda abajo
+        }
+    </script>
 </body>
 </html>
-
-
- 
-
-

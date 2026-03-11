@@ -43,7 +43,7 @@
                     </div>
                 <br>
                 <br>
-                    <p class="auth-subtitle mb-5">Ingreso al Sistema Hair 15:22</p>
+                    <p class="auth-subtitle mb-5">Ingreso al Sistema</p>
 
                         <form method="POST" action="{{ route('login') }}">
                             @csrf

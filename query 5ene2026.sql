@@ -1,11 +1,30 @@
-select precio,precio_compra,stock,stock_fraccion,costo_promedio,a.* from productos a order by updated_at desc 
+select precio,precio_compra,stock,stock_fraccion,costo_promedio,unidad_medida,cantidad_por_unidad, 
+a.* from productos a 
+where id = 125
+order by updated_at desc 
 
+select * from kardexes where producto_id = 125
+
+select * frm 
 alter table productos add unidad_medida varchar(100)
 alter table productos add cantidad_medida decimal(10,2) 
 alter table productos add cantidad_por_unidad decimal(10,2) 
 alter table productos add stock_fraccion decimal(10,2)
 
 select * from categorias
+
+
+SELECT * FROM productos
+
+
+select * from kardexes 
+
+UPDATE productos
+SET unidad_medida = 'ML'
+WHERE unidad_medida = 'MILILITROS'
+
+
+select * from productos
 
 select * from comprobante_cabeceras
 

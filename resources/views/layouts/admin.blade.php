@@ -135,9 +135,43 @@
 
                         </li>
 
+                        <li class="sidebar-item  has-sub">
 
+                            <a href="#" class='sidebar-link'>
+                                <i class="bi bi-collection-fill"></i>
+                                <span>Inventario</span>
+                            </a>
+                            <ul class="submenu ">
+                                <li class="submenu-item">
+                                    <a href="{{ url('/admin/categorias')}}" class='submenu-link'>
+                                        <i class="bi bi-tags"></i>
+                                        <span>Categoría</span>
+                                    </a>
+                                </li>
+                                <li class="submenu-item">
+                                    <a href="{{ url('/admin/productos')}}" class='submenu-link'>
+                                        <i class="bi bi-box-seam"></i>
+                                        <span>Productos</span>
+                                    </a>
+                                </li>
+                                <li class="submenu-item">
+                                    <a href="{{url('/admin/compras')}}" class='submenu-link'>
+                                        <i class="bi bi-cart"></i>
+                                        <span>Compras</span>
+                                    </a>
+                                </li>
+                                <li class="submenu-item">
+                                    <a href="{{url('/admin/ajustes')}}" class='submenu-link'>
+                                        <i class="bi bi-gear"></i>
+                                        <span>Ajustes</span>
+                                    </a>
+                                </li>
 
-                        <li class="sidebar-title">Inventario</li>
+                            </ul>
+
+                        </li>
+
+                        <!-- <li class="sidebar-title">Inventario</li>
                         <li class="sidebar-item {{ request()->is('admin/categoria*') ? 'active' : '' }}">
                             <a href="{{ url('/admin/categorias')}}" class='sidebar-link'>
                                 <i class="bi bi-tags"></i>
@@ -161,7 +195,7 @@
                                                         <i class="bi bi-cash-stack"></i>
                                                         <span>Ventas</span>
                                                     </a>
-                                                </li>
+                                                </li> -->
                         <li class="sidebar-item  has-sub">
 
                             <a href="#" class='sidebar-link'>
@@ -170,16 +204,33 @@
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item">
-                                    <a href="{{ url('/admin/pacientes')}}" class="submenu-link">Paciente</a>
+                                    <a href="{{url('/admin/pacientes')}}" class='submenu-link'>
+                                        <i class="bi bi-person-circle"></i>
+                                        <span>Pacientes</span>
+                                    </a>
                                 </li>
                                 <li class="submenu-item">
-                                    <a href="{{ url('/admin/clientes')}}" class="submenu-link">Cliente</a>
+                                    <a href="{{url('/admin/clientes')}}" class='submenu-link'>
+                                        <i class="bi bi-people"></i>
+                                        <span>Clientes</span>
+                                    </a>
                                 </li>
                                 <li class="submenu-item">
-                                    <a href="account-security.html" class="submenu-link">Medicamento</a>
+                                    <a href="{{url('/admin/facturas')}}" class='submenu-link'>
+                                        <i class="bi bi-cash-stack"></i>
+                                        <span>Facturas</span>
+                                    </a>
                                 </li>
                                 <li class="submenu-item">
-                                    <a href="account-security.html" class="submenu-link">Listado de Consultas</a>
+                                    <a href="account-security.html" class="submenu-link">
+                                        <i class="bi bi-capsule"></i>
+                                        <span>Medicamentos</span></a>
+                                </li>
+                                <li class="submenu-item">
+                                    <a href="account-security.html" class="submenu-link">
+                                        <i class="bi bi-person-hearts"></i>
+                                        <span>Atenciones</span></a>
+                                </li>
                             </ul>
 
                         </li>
@@ -201,14 +252,20 @@
 
 
                                 <li class="submenu-item">
-                                    <a href="account-profile.html" class="submenu-link">Perfil</a>
+                                    <a href="account-profile.html" class="submenu-link">
+                                        <i class="bi bi-person-badge"></i>
+                                        <span>Perfil</span></a>
                                 </li>
                                 <li class="submenu-item">
-                                    <a href="account-security.html" class="submenu-link">Seguridad</a>
+                                    <a href="account-security.html" class="submenu-link">
+                                        <i class="bi bi-shield-lock"></i>
+                                        <span>Seguridad</span></a>
                                 </li>
                                 <li class="submenu-item">
                                     <a href="{{ route('logout') }}" class="submenu-link" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">Cerrar Sesión
+                                                     document.getElementById('logout-form').submit();">
+                                        <i class="bi bi-box-arrow-right"></i>
+                                        <span>Cerrar Sesión</span>
                                     </a>
                                     <form id="logout-form" action="{{ route('logout')}}" method="POST"
                                         style="display:none;">

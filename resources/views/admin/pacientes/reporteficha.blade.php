@@ -318,8 +318,8 @@
         <!-- ENCABEZADO -->
         <div class="header">
             <div class="header-top">
-                <div class="logo">CENTRO MÉDICO</div>
-                <div class="subtitle">Sistema de Gestión de Pacientes</div>
+                <div class="logo">{{ $ajuste->nombre ?? 'Nombre de la Empresa' }}</div>
+                <div class="subtitle">{{ $ajuste->descripcion ?? 'Sistema de Gestión de Pacientes' }}</div>
             </div>
             <div class="document-title">FICHA MÉDICA DEL PACIENTE</div>
             <div class="document-number">

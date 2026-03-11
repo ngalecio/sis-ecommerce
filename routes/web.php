@@ -101,6 +101,11 @@ Route::get('/admin/productos', [ProductoController::class, 'index'])->name('admi
 Route::get('/admin/productos/create', [ProductoController::class, 'create'])->name('admin.productos.create')->middleware('auth');
 Route::post('/admin/productos/create', [ProductoController::class, 'store'])->name('admin.productos.store')->middleware('auth');
 Route::get('/admin/productos/insumos-list', [ProductoController::class, 'listJsonInsumos'])->name('admin.productos.list')->middleware('auth');
+Route::get('/admin/productos/kardex-list', [ProductoController::class, 'listJsonKardex'])->name('admin.productos.listkardex')->middleware('auth');
+// Esta línea está bien si los parámetros y el método existen en el controlador
+Route::get('/admin/productos/reportepdf', [ProductoController::class, 'reportepdf'])->name('admin.productos.reportetodospdf')->middleware('auth');
+
+Route::get('/admin/productos/reportekardex/{id_producto}/{fecha_desde}/{fecha_hasta}', [ProductoController::class, 'reportekardex'])->name('admin.productos.reportetodos')->middleware('auth');
 
 Route::get('/admin/productos/{id}', [ProductoController::class, 'show'])->name('admin.productos.show')->middleware('auth');
 Route::get('/admin/productos/{id}/edit', [ProductoController::class, 'edit'])->name('admin.productos.edit')->middleware('auth');
