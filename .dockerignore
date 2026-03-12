@@ -1,6 +1,13 @@
-vendor
-node_modules
-public/storage
-public/build
 .git
+.github
 .env
+.env.*
+!.env.example
+node_modules
+storage/logs/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+.DS_Store
+Thumbs.db
+*.log
