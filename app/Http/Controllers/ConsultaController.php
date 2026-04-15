@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CatalogoDetalle;
 use App\Models\Consulta;
 use App\Models\ConsultaDetalle;
 use App\Models\ConsultaImagen;
@@ -19,6 +20,82 @@ class ConsultaController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function lista_atenciones(Request $request)
+    {
+        $buscar = $request->get('search');
+        $fecha_desde = $request->get('fecha-desde');
+        $fecha_hasta = $request->get('fecha-hasta');
+
+
+
+        // Consulta Eloquent con relación a Cliente
+        $query = Consulta::with('paciente:id,nombres,apellidos,cedula,telefono,email')
+            ->select(
+                'id',
+                'fecha',
+                'paciente_id',
+                'tipo_consulta',
+                'comentario_1',
+                'comentario_2',
+                'comentario_3',
+                'comentario_4',
+                'establecimiento',
+                'alergias',
+                'medicamentos',
+                'antecedentes_personales',
+                'antecedentes_familiares'
+            );
+
+        
+
+
+
+
+        if ($fecha_desde && $fecha_hasta) {
+
+          
+        } else {
+            $fecha_desde = date('Y-m-01');
+            $fecha_hasta = date('Y-m-t');
+            //$query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+        }
+
+        $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+
+        if ($buscar) {
+
+
+            $query->whereHas('paciente', function ($q) use ($buscar) {
+                $q->where('nombres', 'like', '%' . $buscar . '%')
+                    ->orWhere('apellidos', 'like', '%' . $buscar . '%')
+                    ->orWhere('cedula', 'like', '%' . $buscar . '%');
+            });
+        }
+
+        // if ($buscar) {
+        //     $query->where(function ($q) use ($buscar) {
+        //         $q->where('alergias', 'like', '%' . $buscar . '%')
+        //             ->orWhere('medicamentos', 'like', '%' . $buscar . '%')
+        //             ->orWhere('tipo_consulta', 'like', '%' . $buscar . '%')
+
+        //             ->orWhere('antecedentes_personales', 'like', '%' . $buscar . '%')
+        //             ->orWhere('antecedentes_familiares', 'like', '%' . $buscar . '%')
+        //             ->orWhere('comentario_1', 'like', '%' . $buscar . '%')
+        //             ->orWhere('comentario_2', 'like', '%' . $buscar . '%')
+        //             ->orWhere('comentario_3', 'like', '%' . $buscar . '%')
+        //             ->orWhere('comentario_4', 'like', '%' . $buscar . '%');
+        //     });
+        // }
+        $query->orderBy('fecha', 'desc');
+
+
+
+        $consultas = $query->paginate(ENV('PAGE_SIZE'));
+        $consultas->appends(['search' => $buscar]);
+        $consultas->appends(['fecha-desde' => $fecha_desde, 'fecha-hasta' => $fecha_hasta]);
+        return view('admin.consultas.index', compact('consultas', 'buscar', 'fecha_desde', 'fecha_hasta'));
+    }
+    
     public function index()
     {
         //
@@ -397,9 +474,16 @@ class ConsultaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Consulta $consulta)
+    public function edit(String $id)
     {
-        //
+        if ($id == 0) {
+            $consulta = null;
+        } else {
+            $consulta = Consulta::findOrFail($id);
+        }
+        $condiciones_credito = CatalogoDetalle::where('codigo_catalogo', 'CONDICION_CREDITO')->get();
+        return view('admin.consultas.edit', compact('consulta', 'condiciones_credito'));
+
     }
 
     /**

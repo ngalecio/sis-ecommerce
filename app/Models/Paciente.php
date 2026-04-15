@@ -32,6 +32,7 @@ class Paciente extends Model
         'alergias',
         'antecedentes_familiares',
         'establecimiento',
+        'cliente_id',
     ];
 
     public function catalogo_tipo_persona()
@@ -44,5 +45,10 @@ class Paciente extends Model
     {
         return $this->belongsTo(CatalogoDetalle::class, 'tipo_identificacion', 'codigo_catalogo_detalle')
             ->where('codigo_catalogo', 'TIPO_IDENTIFICACION');
+    }
+
+    public function imagenes()
+    {
+        return $this->hasMany(PacienteImagen::class);
     }
 }

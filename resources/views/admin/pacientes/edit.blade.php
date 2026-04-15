@@ -12,12 +12,12 @@
                 <ul class="nav nav-tabs" id="myTabPaciente" role="tablist">
                     <li class="nav-item" role="presentation">
                         <a class="nav-link active" id="paciente-tab" data-bs-toggle="tab" href="#paciente" role="tab"
-                            aria-controls="paciente" aria-selected="true">Paciente</a>
+                            aria-controls="paciente" aria-selected="true">Cliente</a>
                     </li>
                     @if(isset($paciente->id) && $paciente->id)
                     <li class="nav-item" role="presentation">
                         <a class="nav-link" id="paciente-consulta-tab" data-bs-toggle="tab" href="#paciente-consulta"
-                            role="tab" aria-controls="paciente-consulta" aria-selected="false">Consulta </a>
+                            role="tab" aria-controls="paciente-consulta" aria-selected="false">Atención </a>
                     </li>
                     <li class="nav-item" role="presentation">
                         <a class="nav-link" id="historial-tab" data-bs-toggle="tab" href="#historial" role="tab"
@@ -32,8 +32,8 @@
                             <div class="card">
 
                                 <div class="card-header">
-                                    <h4>{{ isset($paciente->id) && $paciente->id ? 'Edición de Paciente' : 'Registrar
-                                        Paciente' }}
+                                    <h4>{{ isset($paciente->id) && $paciente->id ? 'Edición de Cliente' : 'Registrar
+                                        Cliente' }}
                                         @if(isset($paciente->id) && $paciente->id)
                                         <button type="button" class="btn btn-success"
                                             style="float: right; margin-left: 10px;"
@@ -262,6 +262,100 @@
                                             </div>
                                         </div>
 
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="card">
+
+                                                    <div class="card-header">
+                                                        <h4>Fotos del Cliente
+                                                            <div style="float: right;">
+                                                                <button type="button" class="btn btn-primary"
+                                                                    onclick="mostrarModalImagenCliente()">
+                                                                    <i class="bi bi-plus"></i> Cargar Imagen
+                                                                </button>
+                                                            </div>
+                                                        </h4>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row" id="id_galeria_cliente">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="modal fade" id="exampleFotoCliente" tabindex="-1"
+                                            aria-labelledby="exampleFotoClienteLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleFotoClienteLabel">Subir Imagen</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <form action="" method="POST" enctype="multipart/form-data">
+                                                            @csrf
+
+
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <label for="logo"
+                                                                            class="form-label">Imagen</label>
+                                                                        <div class="input-group">
+                                                                            <span class="input-group-text"><i
+                                                                                    class="bi bi-image"></i></span>
+                                                                            <input type="file" class="form-control"
+                                                                                id="imagenCliente" name="imagenCliente"
+                                                                                accept="image/*" @error('imagenCliente')
+                                                                                is-invalid @enderror
+                                                                                onchange="mostrarImagenCliente(event)">
+                                                                            @error('imagenCliente')
+                                                                            <small style="color:red">{{
+                                                                                $message}}</small>
+                                                                            @enderror
+                                                                        </div>
+
+                                                                    </div>
+                                                                    <div
+                                                                        style="display: flex; justify-content: center;">
+
+                                                                        <img src=""
+                                                                            style="max-width: 300px; margin-top: 10px; max-height: 200px;"
+                                                                            id="preview1Cliente" alt="">
+
+                                                                    </div>
+                                                                    <script>
+                                                                        const mostrarImagenCliente = e =>
+                                                                            document.getElementById('preview1Cliente').src = URL.createObjectURL(e.target.files[0]);
+                                                                    </script>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <div class="form-group">
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">Cerrar</button>
+                                                                        <button type="button" class="btn btn-primary"
+                                                                            onclick="subirImagenCliente()">Subir
+                                                                            Imagen</button>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                        </form>
+
+                                                    </div>
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </form>
                                 </div>
                             </div>
@@ -274,7 +368,7 @@
                         aria-labelledby="paciente-consulta-tab">
                         <div class="card">
                             <div class="card-header">
-                                <h4>Consulta del Paciente
+                                <h4>Cliente: {{ $paciente->nombres ?? '' }} {{ $paciente->apellidos ?? '' }}
                                     <button id="btn-consultar" type="button" class="btn btn-info"
                                         style="float: right; margin-left: 10px;" onclick="consultar_cita();">
                                         <i class="bi bi-search"></i> Consultar
@@ -294,7 +388,7 @@
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="id-consulta" class="form-label">N° Consulta</label>
+                                            <label for="id-consulta" class="form-label">N° Atención</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="bi bi-hash"></i></span>
                                                 <input type="text" name="id-consulta" id="id-consulta"
@@ -304,13 +398,13 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="fecha_consulta" class="form-label">Fecha de Consulta</label>
+                                            <label for="fecha_consulta" class="form-label">Fecha de Atención</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i
                                                         class="bi bi-calendar-date"></i></span>
                                                 <input type="date" name="fecha-consulta" id="fecha-consulta"
                                                     value="{{ old('fecha-consulta') }}" class="form-control"
-                                                    placeholder="Seleccione la fecha de consulta">
+                                                    placeholder="Seleccione la fecha de atención">
                                             </div>
                                             @error('fecha-consulta')
                                             <small class="text-danger">{{ $message }}</small>
@@ -319,7 +413,7 @@
                                     </div>
                                     <div class="col-md-4">
                                         <div class="form-group">
-                                            <label for="tipo_consulta" class="form-label">Tipo de Consulta</label>
+                                            <label for="tipo_consulta" class="form-label">Tipo de Atención</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="bi bi-list-check"></i></span>
                                                 <select name="tipo-consulta" id="tipo-consulta" class="form-select"
@@ -414,13 +508,13 @@
                                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                                 data-bs-target="#collapseOne" aria-expanded="true"
                                                 aria-controls="collapseOne">
-                                                Evolución Médica
+                                                <h6>Insumos Utilizados</h6>
                                             </button>
                                         </h2>
                                         <div id="collapseOne" class="accordion-collapse collapse show"
                                             aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
-                                                <div class="row">
+                                                <div class="row" hidden>
                                                     <div class="col-md-12">
                                                         <div class="form-group">
 
@@ -437,16 +531,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="row">
-                                                    <h5>Insumos Adjuntos
-                                                        <div style="float: right;">
-                                                            <button type="button" class="btn btn-success"
-                                                                onclick="totalizar()">
-                                                                <i class="bi bi-plus"></i>
-                                                            </button>
-                                                        </div>
-                                                    </h5>
-                                                </div>
+
                                                 <div class="row">
                                                     <div class="col-md-3">
                                                         <div class="form-group">
@@ -504,13 +589,14 @@
 
                                                     <div class="col-md-2">
                                                         <div class="form-group">
-                                                            <label for="precio_fraccion" class="form-label">Precio por Fraccion</label>
+                                                            <label for="precio_fraccion" class="form-label">Precio por
+                                                                Fraccion</label>
                                                             <div class="input-group">
                                                                 <span class="input-group-text"><i
                                                                         class="bi bi-currency-dollar"></i></span>
                                                                 <input type="number" step="0.01" class="form-control"
-                                                                    id="precio_fraccion" name="precio_fraccion" placeholder="Precio por Fraccion"
-                                                                    disabled>
+                                                                    id="precio_fraccion" name="precio_fraccion"
+                                                                    placeholder="Precio por Fraccion" disabled>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -555,7 +641,8 @@
                                                     <div class="col-md-4 offset-md-8">
                                                         <div class="d-flex flex-column align-items-end">
                                                             <div class="mb-1">
-                                                                <label id="lbl_subtotal_impuesto" class="fw-bold">SubTotal: </label>
+                                                                <label id="lbl_subtotal_impuesto"
+                                                                    class="fw-bold">SubTotal: </label>
                                                                 <span id="insumos-total" class="ms-2">0.00</span>
                                                             </div>
                                                             <div class="mb-1">
@@ -574,7 +661,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="accordion-item">
+                                    <div class="accordion-item" hidden>
                                         <h2 class="accordion-header" id="headingTwo">
                                             <button class="accordion-button collapsed" type="button"
                                                 data-bs-toggle="collapse" data-bs-target="#collapseTwo"
@@ -606,7 +693,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="accordion-item">
+                                    <div class="accordion-item" hidden>
                                         <h2 class="accordion-header" id="headingThree">
                                             <button class="accordion-button collapsed" type="button"
                                                 data-bs-toggle="collapse" data-bs-target="#collapseThree"
@@ -637,7 +724,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="accordion-item">
+                                    <div class="accordion-item" hidden>
                                         <h2 class="accordion-header" id="headingFour">
                                             <button class="accordion-button collapsed" type="button"
                                                 data-bs-toggle="collapse" data-bs-target="#collapseFour"
@@ -673,26 +760,10 @@
                                             <button class="accordion-button collapsed" type="button"
                                                 data-bs-toggle="collapse" data-bs-target="#collapseFive"
                                                 aria-expanded="false" aria-controls="collapseFive">
-                                                Galería de Imágenes
+                                                <h6>Galería de Imágenes</h6>
                                             </button>
                                         </h2>
-                                        <div class="modal fade" id="imagen_maximizada" tabindex="-1"
-                                            aria-labelledby="imagenLabel_20" aria-hidden="true">
-                                            <div class="modal-dialog modal-fullscreen modal-dialog-centered">
-                                                <div class="modal-content"
-                                                    style="background: transparent; border: none;">
-                                                    <div class="modal-header" style="border: none;">
-                                                        <button type="button" class="btn-close btn-close-white ms-auto"
-                                                            data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body d-flex justify-content-center align-items-center p-0"
-                                                        style="height: 100vh;">
-                                                        <img src="" alt="Imagen del Producto"
-                                                            style="width: 100vw; height: 100vh; object-fit: contain; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                         <div class="modal fade" id="exampleModal" tabindex="-1"
                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
@@ -772,7 +843,7 @@
                                                     <div class="card">
 
                                                         <div class="card-header">
-                                                            <h4>Imágenes del Paciente
+                                                            <h4>Imágenes de la Atención
                                                                 <div style="float: right;">
                                                                     <button type="button" class="btn btn-primary"
                                                                         onclick="mostrarModalImagen()">
@@ -832,7 +903,7 @@
                                             <span class="input-group-text"><i
                                                     class="bi bi-person-badge-fill"></i></span>
                                             <input type="text" id="search-citas" name="search-citas"
-                                                class="form-control" placeholder="Buscar consultas...">
+                                                class="form-control" placeholder="Buscar atención...">
                                             <button id="btn-buscar-citas" type="button" class="btn btn-primary"
                                                 onclick="cargar_citas()">
                                                 <i class="bi bi-search"></i>Buscar</button>
@@ -855,9 +926,9 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>ID Consulta</th>
+                                    <th>ID Atención</th>
                                     <th>Fecha</th>
-                                    <th>Tipo Consulta</th>
+                                    <th>Tipo Atención</th>
                                     <th>Medicamentos</th>
                                     <th>Antecedentes Familiares</th>
                                     <th>Alergias</th>
@@ -882,6 +953,20 @@
         </div>
     </div>
 </div>
+                                        <div class="modal fade" id="imagen_maximizada" tabindex="-1" aria-labelledby="imagenLabel_20" aria-hidden="true">
+                                            <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+                                                <div class="modal-content" style="background: transparent; border: none;">
+                                                    <div class="modal-header" style="border: none;">
+                                                        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body d-flex justify-content-center align-items-center p-0" style="height: 100vh;">
+                                                        <img src="" alt="Imagen del Producto"
+                                                            style="width: 100vw; height: 100vh; object-fit: contain; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 @endsection
 
 @push('scripts')
@@ -1154,11 +1239,11 @@
         const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
         const unidad_medida = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-unidad-medida') || '';
         const cantidad_por_unidad = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-cantidad-por-unidad') || '';
-        
-        const precio_fraccion =precio/cantidad_por_unidad;
+
+        const precio_fraccion = precio / cantidad_por_unidad;
 
         document.getElementById('unidad_medida').value = unidad_medida;
-           document.getElementById('precio_fraccion').value = parseFloat(precio_fraccion).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        document.getElementById('precio_fraccion').value = parseFloat(precio_fraccion).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         if (precio) {
             document.getElementById('precio').value = parseFloat(precio).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         } else {
@@ -1272,12 +1357,12 @@
     // Array para almacenar los insumos agregados
     let insumosDetalle = [];
     let porcentajeIva = 0.15;
-      let subtototalIva = 0;
-        let subtotalCero = 0;
-        let descuento = 0;
-        let iva = 0;
-        let totalIva = 0;
-        let ice = 0;
+    let subtototalIva = 0;
+    let subtotalCero = 0;
+    let descuento = 0;
+    let iva = 0;
+    let totalIva = 0;
+    let ice = 0;
     function agregarInsumo() {
         const productoSelect = document.getElementById('id-productos-insumos');
         const producto = productoSelect.value;
@@ -1285,7 +1370,7 @@
         const cantidad = document.getElementById('cantidad').value;
         const unidad_medida = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-unidad-medida') || '';
         const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
-         const precio_fraccion= document.getElementById('precio_fraccion').value;
+        const precio_fraccion = document.getElementById('precio_fraccion').value;
 
         if (!producto || !nombre || !cantidad || !unidad_medida || !precio) {
             alert('Complete todos los campos de insumo.');
@@ -1364,7 +1449,7 @@
         iva = subtototalIva * porcentajeIva;
         totalIva = subtototalIva + iva;
 
-      
+
         document.getElementById('insumos-total').textContent = '$' + subtototalIva.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         document.getElementById('insumos-total').style.textAlign = 'right';
         document.getElementById('insumos-iva').textContent = '$' + iva.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -1413,6 +1498,49 @@
             }
         });
     }
+
+        function preguntarCliente(id, event) {
+                event.preventDefault();
+                Swal.fire({
+                    title: '¿Estás seguro de eliminar esta imagen?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Eliminar',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        eliminarImagenCliente(id);
+                    }
+                });
+            }
+
+                function eliminarImagenCliente(imagenId) {
+                        // alert('Eliminar imagen con ID: ' + imagenId);
+                        fetch(`/admin/pacientes/${imagenId}/remove_imagen`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            }
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    return response.json().then(err => Promise.reject(err));
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                alert('Imagen eliminada correctamente');
+                                consultar_fotos_paciente();
+                                //  location.reload();
+                            })
+                            .catch(error => {
+                                alert('Error al eliminar la imagen');
+                                console.error(error);
+                            });
+                    }
     function eliminarImagenConsulta(imagenId) {
         // alert('Eliminar imagen con ID: ' + imagenId);
         fetch(`/admin/consultas/${imagenId}/remove_imagen`, {
@@ -1440,13 +1568,13 @@
     }
     function mostrarImagenMaximizada(imagenId, imagenUrl) {
 
-        // alert('Mostrar imagen ID: ' + imagenId + ', URL: ' + imagenUrl);
+      //  alert('Mostrar imagen ID: ' + imagenId + ', URL: ' + imagenUrl);
 
 
         // var myModal = new bootstrap.Modal(document.getElementById('imagen_maximizada'), {
         //     keyboard: false
         // });
-        // myModal.show();
+        // myModal.show();c
 
 
         // return;
@@ -1461,6 +1589,54 @@
         });
         myModal.show();
     }
+
+
+       function subirImagenCliente() {
+            const formData = new FormData();
+            const imagenInput = document.getElementById('imagenCliente');
+
+            const paciente_id = document.getElementById('id-paciente') ? document.getElementById('id-paciente').value : '';
+            
+            if (!imagenInput.files.length) {
+                alert('Seleccione una imagen para subir.');
+                return;
+            }
+
+              alert('Subiendo imagen para paciente ID: ' + paciente_id );
+
+            formData.append('imagen', imagenInput.files[0]);
+            formData.append('paciente_id', paciente_id);
+            formData.append('consulta_id', 0);
+            formData.append('_token', '{{ csrf_token() }}');
+
+          //  let url = `/admin/consultas/${consulta_id || 0}/upload_imagen`;
+              let url = `/admin/pacientes/${paciente_id || 0}/upload_imagen`;
+            fetch(url, {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(err => Promise.reject(err));
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    alert('Imagen del Cliente subida correctamente');
+
+                    // Cerrar el modal después de subir la imagen
+                    var modalElement = document.getElementById('exampleFotoCliente');
+                    var modalInstance = bootstrap.Modal.getInstance(modalElement);
+                    if (modalInstance) {
+                        modalInstance.hide();
+                    }
+                    consultar_fotos_paciente();
+                })
+                .catch(error => {
+                    alert('Error al subir la imagen', error.message || JSON.stringify(error));
+                    console.error(error);
+                });
+        }
     function subirImagen() {
         const formData = new FormData();
         const imagenInput = document.getElementById('imagen');
@@ -1506,7 +1682,33 @@
                 console.error(error);
             });
     }
+
+    function mostrarModalImagenCliente() {
+        // Validar que se haya cargado un paciente y que se haya creado una consulta
+        var pacienteId = document.getElementById('id-paciente') ? document.getElementById('id-paciente').value : '';
+
+        if (!pacienteId || pacienteId === '0') {
+            alert('Debe seleccionar o crear un paciente antes de subir una imagen.');
+            return;
+        }
+
+        var myModal = new bootstrap.Modal(document.getElementById('exampleFotoCliente'), {
+            keyboard: false
+        });
+        myModal.show();
+    }
     function mostrarModalImagen() {
+        // Validar que se haya cargado un paciente y que se haya creado una consulta
+        var pacienteId = document.getElementById('id-paciente') ? document.getElementById('id-paciente').value : '';
+        var consultaId = document.getElementById('id-consulta') ? document.getElementById('id-consulta').value : '';
+        if (!pacienteId || pacienteId === '0') {
+            alert('Debe seleccionar o crear un paciente antes de subir una imagen.');
+            return;
+        }
+        if (!consultaId || consultaId === '0') {
+            alert('Debe crear una Atención antes de subir una imagen.');
+            return;
+        }
         var myModal = new bootstrap.Modal(document.getElementById('exampleModal'), {
             keyboard: false
         });
@@ -1558,6 +1760,8 @@
         // alert('ID en la URL: ' + id);
 
         cargarProductosInsumos();
+        cargar_citas();
+        consultar_fotos_paciente();
     });
 
     async function cargar_citas(page = 1) {
@@ -1705,6 +1909,82 @@
                 alert('Error: ' + (error.message || 'Error desconocido'));
             });
     }
+
+        function consultar_fotos_paciente() {
+                const idPaciente = document.getElementById('id-paciente').value;
+                 //alert('Consultar fotos del paciente: ' + idPaciente);
+
+
+                // Lógica para cargar los datos y mostrar el modal de edición de catálogo detalle
+                fetch(`/admin/pacientes/${idPaciente}/imagenes`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // console.log('Datos recibidos para consulta:', data);
+                        if (data.success) {
+                            if (!data.data) {
+                                alert("Paciente no existe");
+                                return;
+                            }
+                          //  console.log('Datos del paciente:', data.data);
+                            // Asumiendo que tienes un modal y formulario para editar catálogo detalle
+                    
+
+
+                            if (Array.isArray(data.data) && data.data.length > 0) {
+                                // Renderiza las imágenes en la galería
+                                // const galeriaRow = document.querySelector('#collapseFive .row');
+                                const galeriaRow = document.getElementById('id_galeria_cliente');
+                                if (galeriaRow) {
+                                    galeriaRow.innerHTML = '';
+                                    data.data.forEach(imagen => {
+                                        const col = document.createElement('div');
+                                        col.className = 'col-md-3';
+                                        col.style.marginBottom = '20px';
+                                        col.innerHTML = `
+                                        <div class="card shadow" style="box-shadow: 0 0 0 2px #0d6efd;">
+                                            <a href="#" onclick="mostrarImagenMaximizada('${imagen.id}', '${imagen.imagen}')">
+                                                <img src="${imagen.url || '/storage/' + imagen.imagen}" class="card-img-top" alt="Imagen del Producto"
+                                                    style="width: 100%; height: 200px; object-fit: contain; object-position: center; background: #f8f9fa;">
+                                            </a>
+                                            <div class="d-flex justify-content-end">
+                                                    <button type="button" class="btn btn-sm btn-danger" onclick="preguntarCliente(${imagen.id}, event);">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                    
+                                            </div>
+                                        </div>
+                                    `;
+                                        galeriaRow.appendChild(col);
+                                    });
+                                }
+                            } else {
+                                const galeriaRow = document.getElementById('id_galeria_cliente');
+
+                                if (galeriaRow) {
+                                    galeriaRow.innerHTML = '';
+                                    galeriaRow.innerHTML = `<div class="col-12 text-center text-muted py-4">No hay imágenes registradas.</div>`;
+                                }
+                            }
+
+
+    
+                 
+                   
+
+                            // Cambiar el tab actual a "paciente-consulta"
+                            // var tabTrigger = document.querySelector('a#paciente-consulta-tab');
+                            // if (tabTrigger) {
+                            //     var tab = new bootstrap.Tab(tabTrigger);
+                            //     tab.show();
+                            // }
+                        } else {
+                            alert("Error al cargar los datos de las fotos del paciente");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
     function consultar_cita() {
         const idConsulta = document.getElementById('id-consulta').value;
         // alert('Consultar atención para el ID de consulta: ' + idConsulta);

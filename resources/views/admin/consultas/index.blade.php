@@ -5,9 +5,9 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h4>Facturas Registradas
+                <h4>Atenciones Registradas
                 </h4>
-                <form action="{{ url('/admin/facturas') }}" method="GET">
+                <form action="{{ url('/admin/consultas') }}" method="GET">
                     <div class="row">
 
                         <div class="col-md-3">
@@ -39,7 +39,7 @@
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bi bi-person-badge-fill"></i></span>
                                     <input type="text" id="search" name="search" class="form-control"
-                                        value="{{ $buscar ?? request('search') }}" placeholder="Buscar Facturas...">
+                                        value="{{ $buscar ?? request('search') }}" placeholder="Buscar Cliente...">
                                     <button id="btn-buscar-citas" type="submit" class="btn btn-primary">
                                         <i class="bi bi-search"></i>Buscar</button>
                                 </div>
@@ -47,7 +47,7 @@
                         </div>
                         <div class="col-md-2 d-flex justify-content-end align-items-end" style="padding-top: 24px;">
                             <div class="form-group">
-                                <a href="{{ url('/admin/facturas/0/edit') }}" style="float: right;"
+                                <a href="{{ url('/admin/consultas/0/edit') }}" style="float: right;"
                                     class="btn btn-primary">
                                     <i class="bi bi-plus"></i> Crear Nuevo</a>
                             </div>
@@ -72,76 +72,55 @@
 
             <table class="table table-bordered table-hover table-striped">
                 <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Comprobante</th>
-                        <th>Cliente</th>
-                        <th>Fecha</th>
-                        <th>Subtotal</th>
-                        <th>Iva</th>
-                        <th>Total</th>
-
-
-                        <th class="text-center">Acciones</th>
-                    </tr>
+                                    <th>#</th>
+                                    <th>ID Atención</th>
+                                    <th>Paciente</th>
+                                    <th>Fecha</th>
+                                    <th>Tipo Atención</th>
+                                    <th>Medicamentos</th>
+                                    <th>Antecedentes Familiares</th>
+                                    <th>Alergias</th>
+                                    <th>Antecedentes Personales</th>
+                                    <th>Diagnóstico</th>
+                                    <th class="text-center">Acciones</th>
                 </thead>
                 <tbody>
-                    @foreach($facturas as $factura)
+                    @foreach($consultas as $consulta)
                     <tr>
-                        <td>{{ ($facturas->currentPage() -1)*$facturas->perPage()+$loop->iteration }}</td>
-                        <td>{{ $factura->numero_comprobante }}</td>
-                        <td>{{ $factura->cliente->apellidos }} {{ $factura->cliente->nombres }}</td>
-                        <td>{{ \Carbon\Carbon::parse($factura->fecha)->format('d/m/Y') }}</td>
-                        <td>$ {{ number_format($factura->valor_subtotal, 2, '.', ',') }}</td>
-                        <td>$ {{ number_format($factura->valor_iva, 2, '.', ',') }}</td>
-                        <td>$ {{ number_format($factura->valor_total, 2, '.', ',') }}</td>
+                        <td>{{ ($consultas->currentPage() -1)*$consultas->perPage()+$loop->iteration }}</td>
+                        <td>{{ $consulta->id }}</td>
+                        <td>{{ $consulta->paciente->apellidos ?? '' }} {{ $consulta->paciente->nombres ?? '' }}</td>
+                        <td>{{ \Carbon\Carbon::parse($consulta->fecha)->format('d/m/Y') }}</td>
+                        <td>{{ $consulta->tipo_atencion }}</td>
+                        <td>{{ $consulta->medicamentos }}</td>
+                        <td>{{ $consulta->antecedentes_familiares }}</td>
+                        <td>{{ $consulta->alergias }}</td>
+                        <td>{{ $consulta->antecedentes_personales }}</td>
+                        <td>{{ $consulta->diagnostico }}</td>
 
                         <td class="text-center">
-                            <a href="{{ url('/admin/facturas/'.$factura->id) }}" class="btn btn-sm btn-info ">
-                                <i class="bi bi-eye"></i>
+                       
+                            <a href="{{ url('/admin/consultas/'.$consulta->id.'/edit') }}" class="btn btn-sm btn-success "><i
+                                    class="bi bi-pencil"></i>
+                            
                             </a>
-                            <a href="{{ url('/admin/facturas/'.$factura->id.'/edit') }}"
-                                class="btn btn-sm btn-success "><i class="bi bi-pencil"></i>
-                                
-                            </a>
-                            <form action="{{ url('/admin/facturas/delete/'.$factura->id) }}" method="POST"
-                                id="delete-form-{{ $factura->id }}" style="display: inline-block;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger "
-                                    onclick="preguntar({{$factura->id}}, event);">
-                                    <i class="bi bi-trash"></i></button>
-                            </form>
-                            <script>
-                                function preguntar(id, event) {
-                                    event.preventDefault();
-                                    Swal.fire({
-                                        title: '¿Estás seguro de eliminar esta factura?',
-                                        icon: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonColor: '#3085d6',
-                                        cancelButtonColor: '#d33',
-                                        confirmButtonText: 'Eliminar',
-                                        cancelButtonText: 'Cancelar'
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            document.getElementById('delete-form-' + id).submit();
-                                        }
-                                    });
-                                }
-                            </script>
+    
+ 
                         </td>
+
+   
+
                     </tr>
                     @endforeach
                 </tbody>
             </table>
-            @if($facturas->hasPages())
+            @if($consultas->hasPages())
             <div class="d-flex justify-content-between align-items-center mt-4 px-3">
                 <div class="text-muted">
-                    Mostrando {{ $facturas->firstItem() }} a {{ $facturas->lastItem() }} de {{
-                    $facturas->total() }} registros
+                    Mostrando {{ $consultas->firstItem() }} a {{ $consultas->lastItem() }} de {{
+                    $consultas->total() }} registros
                 </div>
-                {{ $facturas->links('pagination::bootstrap-4') }}
+                {{ $consultas->links('pagination::bootstrap-4') }}
             </div>
             @endif
         </div>

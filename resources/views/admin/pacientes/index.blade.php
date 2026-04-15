@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h4>Pacientes Registrados
+                <h4>Clientes Registrados
                     <a href="{{ url('/admin/pacientes/0/edit') }}" style="float: right; margin-left: 10px;" class="btn btn-primary">
                         <i class="bi bi-plus"></i> Crear Nuevo</a>
 

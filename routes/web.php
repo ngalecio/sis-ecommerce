@@ -100,6 +100,8 @@ Route::post('/admin/categorias/{id}/restore', [CategoriaController::class, 'rest
 Route::get('/admin/productos', [ProductoController::class, 'index'])->name('admin.productos.index')->middleware('auth');
 Route::get('/admin/productos/create', [ProductoController::class, 'create'])->name('admin.productos.create')->middleware('auth');
 Route::post('/admin/productos/create', [ProductoController::class, 'store'])->name('admin.productos.store')->middleware('auth');
+Route::get('/admin/productos/productos-list', [ProductoController::class, 'listJsonProductos'])->name('admin.productos.listado')->middleware('auth');
+
 Route::get('/admin/productos/insumos-list', [ProductoController::class, 'listJsonInsumos'])->name('admin.productos.list')->middleware('auth');
 Route::get('/admin/productos/kardex-list', [ProductoController::class, 'listJsonKardex'])->name('admin.productos.listkardex')->middleware('auth');
 // Esta línea está bien si los parámetros y el método existen en el controlador
@@ -157,8 +159,22 @@ Route::put('/admin/clientes/update/{id}', [ClienteController::class, 'update'])-
 Route::delete('/admin/clientes/delete/{id}', [ClienteController::class, 'destroy'])->name('admin.clientes.destroy')->middleware('auth');
 Route::post('/admin/clientes/{id}/restore', [ClienteController::class, 'restore'])->name('admin.clientes.restore')->middleware('auth');
 
+Route::get('/admin/proveedores', [ClienteController::class, 'listarProveedores'])->name('admin.proveedores.index')->middleware('auth');
+// Route::get('/admin/proveedores/create', [ProveedorController::class, 'create'])->name('admin.proveedores.create')->middleware('auth');
+// Route::post('/admin/proveedores/create', [ProveedorController::class, 'store'])->name('admin.proveedores.store')->middleware('auth');
+// Route::get('/admin/proveedores/proveedores-list', [ProveedorController::class, 'listJsonProveedores'])->name('admin.proveedores.proveedores.list')->middleware('auth');
+// Route::get('/admin/proveedores/clientes-list', [ProveedorController::class, 'listJsonClientes'])->name('admin.proveedores.clientes.list')->middleware('auth');
+// Route::get('/admin/proveedores/{id}', [ProveedorController::class, 'show'])->name('admin.proveedores.show')->middleware('auth');
+ Route::get('/admin/proveedores/{id}/edit', [ClienteController::class, 'editProveedor'])->name('admin.proveedores.edit')->middleware('auth');
+Route::put('/admin/proveedores/update/{id}', [ClienteController::class, 'updateProveedor'])->name('admin.proveedores.update')->middleware('auth');
+// Route::delete('/admin/proveedores/delete/{id}', [ProveedorController::class, 'destroy'])->name('admin.proveedores.destroy')->middleware('auth');
+// Route::post('/admin/proveedores/{id}/restore', [ProveedorController::class, 'restore'])->name('admin.proveedores.restore')->middleware('auth');
+
+
+
 
 Route::get('/admin/pacientes', [PacienteController::class, 'index'])->name('admin.pacientes.index')->middleware('auth');
+
 Route::get('/admin/pacientes/create', [PacienteController::class, 'create'])->name('admin.pacientes.create')->middleware('auth');
 Route::get('/admin/pacientes/reporte/{id}', [PacienteController::class, 'reporte'])->name('admin.pacientes.reporte')->middleware('auth');
 Route::get('/admin/pacientes/reportetodos', [PacienteController::class, 'reportetodos'])->name('admin.pacientes.reportetodos')->middleware('auth');
@@ -168,15 +184,22 @@ Route::post('/admin/pacientes/reportepdf', [PacienteController::class, 'reporteP
 Route::post('/admin/pacientes/create', [PacienteController::class, 'store'])->name('admin.pacientes.store')->middleware('auth');
 Route::put('/admin/pacientes/registrar/{id}', [PacienteController::class, 'registrar'])->name('admin.pacientes.registrar')->middleware('auth');
 Route::get('/admin/pacientes/{id}', [PacienteController::class, 'show'])->name('admin.pacientes.show')->middleware('auth');
+Route::get('/admin/pacientes/{id}/imagenes', [PacienteController::class, 'mostrarImagenes'])->name('admin.pacientes.mostrarImagenes')->middleware('auth');
+
 Route::get('/admin/pacientes/{id}/edit', [PacienteController::class, 'edit'])->name('admin.pacientes.edit')->middleware('auth');
 Route::put('/admin/pacientes/update/{id}', [PacienteController::class, 'update'])->name('admin.pacientes.update')->middleware('auth');
 Route::delete('/admin/pacientes/delete/{id}', [PacienteController::class, 'destroy'])->name('admin.pacientes.destroy')->middleware('auth');
 Route::post('/admin/pacientes/{id}/restore', [PacienteController::class, 'restore'])->name('admin.pacientes.restore')->middleware('auth');
+Route::post('/admin/pacientes/{id}/upload_imagen', [PacienteController::class, 'upload_imagen'])->name('admin.pacientes.upload_imagen')->middleware('auth');
+Route::delete('/admin/pacientes/{id}/remove_imagen', [PacienteController::class, 'remove_imagen'])->name('admin.pacientes.remove_imagen')->middleware('auth');
 
 
-Route::get('/admin/consultas', [ConsultaController::class, 'index'])->name('admin.consultas.index')->middleware('auth');
+
+Route::get('/admin/consultas', [ConsultaController::class, 'lista_atenciones'])->name('admin.consultas.index')->middleware('auth');
 Route::get('/admin/consultas/list', [ConsultaController::class, 'listJson'])->name('admin.consultas.list')->middleware('auth');
 Route::get('/admin/consultas/{id}', [ConsultaController::class, 'show'])->name('admin.consultas.show')->middleware('auth');
+Route::get('/admin/consultas/{id}/edit', [ConsultaController::class, 'edit'])->name('admin.consultas.edit')->middleware('auth');
+
 Route::put('/admin/consultas/registrar/{id}', [ConsultaController::class, 'registrar'])->name('admin.consultas.registrar')->middleware('auth');
 Route::post('/admin/consultas/{id}/upload_imagen', [ConsultaController::class, 'upload_imagen'])->name('admin.consultas.upload_imagen')->middleware('auth');
 Route::delete('/admin/consultas/{id}/remove_imagen', [ConsultaController::class, 'remove_imagen'])->name('admin.consultas.remove_imagen')->middleware('auth');

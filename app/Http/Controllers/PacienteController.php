@@ -3,13 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ajuste;
+use App\Models\Cliente;
+use App\Models\ConsultaImagen;
 use App\Models\Paciente;
+use App\Models\PacienteImagen;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Storage;
 
 
 class PacienteController extends Controller
@@ -143,6 +147,101 @@ class PacienteController extends Controller
         //
     }
 
+
+    public function upload_imagen(Request $request, string $id)
+    {
+        try {
+            $request->validate([
+                'imagen' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Datos de validación incorrectos.',
+                'errors' => $e->errors()
+            ], 422);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $pacienteImagen = new PacienteImagen();
+            $pacienteImagen->paciente_id = $id;
+            if ($request->hasFile('imagen')) {
+                $imagenPath = $request->file('imagen')->store('paciente_imagenes', 'public');
+                $pacienteImagen->imagen = $imagenPath;
+            } else {
+                throw new Exception('No se encontró el archivo de imagen.');
+            }
+
+            $pacienteImagen->save();
+            DB::commit();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Imagen subida exitosamente.',
+                'data' => $pacienteImagen
+            ], 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al guardar la imagen.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function remove_imagen(String $id)
+    {
+        //
+        try {
+            $pacienteImagen = PacienteImagen::find($id);
+
+            if (!$pacienteImagen) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Imagen no encontrada.'
+                ], 404);
+            }
+
+            $pacienteId = $pacienteImagen->paciente_id;
+
+            if (Storage::disk('public')->exists($pacienteImagen->imagen)) {
+                Storage::disk('public')->delete($pacienteImagen->imagen);
+            }
+
+            $pacienteImagen->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Imagen eliminada exitosamente.',
+                'paciente_id' => $pacienteId
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error al eliminar la imagen.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function mostrarImagenes(String $id)
+    {
+        $consulta = PacienteImagen::select(
+            'id',
+   
+            'paciente_id',
+            'imagen',
+        )->where('paciente_id', $id)
+        ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $consulta
+        ]);
+    }
+
     public function registrar(Request $request, string $id)
     {
         Log::info('info del formulario', ['request' => $request->all(), 'Id' => $id]);
@@ -209,6 +308,28 @@ class PacienteController extends Controller
             $paciente->email = $request->email ?? '';
             $paciente->fecha_nacimiento = $request->fecha_nacimiento ?? null;
             $paciente->tipo_identificacion = $request->tipo_identificacion ?? null;
+            $paciente->save();
+            // Mejor lógica para cliente_id
+            if (isset($paciente->cliente_id) && $paciente->cliente_id > 0) {
+                $cliente = Cliente::find($paciente->cliente_id);
+                if (!$cliente) {
+                    $cliente = new Cliente();
+                }
+            } else {
+                $cliente = new Cliente();
+            }
+
+            $cliente->paciente_id = $paciente->id;
+            $cliente->nombres = $paciente->nombres;
+            $cliente->apellidos = $paciente->apellidos;
+            $cliente->cedula = $paciente->cedula;
+            $cliente->direccion = $paciente->direccion;
+            $cliente->telefono = $paciente->telefono;
+            $cliente->email = $paciente->email;
+            $cliente->tipo_persona = "CLI";
+            $cliente->tipo_identificacion = $paciente->tipo_identificacion;
+            $cliente->save();
+            $paciente->cliente_id = $cliente->id;
             $paciente->save();
             DB::commit();
             //  return response()->json(['success' => true, 'message' => 'Categoría actualizada con éxito.','data'=>'AAA'], 201);

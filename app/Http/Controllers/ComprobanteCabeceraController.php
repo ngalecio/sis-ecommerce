@@ -42,7 +42,7 @@ class ComprobanteCabeceraController extends Controller
 
         if ($fecha_desde && $fecha_hasta) {
 
-            //     $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+            $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
         } else {
             $fecha_desde = date('Y-m-01');
             $fecha_hasta = date('Y-m-t');
@@ -153,6 +153,7 @@ class ComprobanteCabeceraController extends Controller
                     $detalleModel->precio = $detalle['precio'];
                     $detalleModel->subtotal = $detalle['total'];
                     $detalleModel->total = $detalle['total'];
+                    $detalleModel->observacion = $detalle['descripcion'] ?? '';
                     $detalleModel->save();
 
 
@@ -243,7 +244,7 @@ class ComprobanteCabeceraController extends Controller
 
         if ($fecha_desde && $fecha_hasta) {
 
-       //     $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+           $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
         } else
         {
         $fecha_desde = date('Y-m-01');
@@ -527,7 +528,7 @@ class ComprobanteCabeceraController extends Controller
         )
             ->with([
                 'cliente:id,nombres,apellidos,direccion,telefono,email,cedula',
-                'detalles:id,comprobante_id,producto_id,cantidad,precio,total,subtotal',
+                'detalles:id,comprobante_id,producto_id,cantidad,precio,total,subtotal,observacion',
                 'detalles.producto:id,nombre,descripcion,codigo',
             ])
             ->find($id);

@@ -24,7 +24,8 @@ class Cliente extends Model
         'credito_usado',
         'credito_saldo',
         'cupo_credito',
-        'tipo_contribuyente'
+        'tipo_contribuyente',
+        'paciente_id',
     ];
 
     public function catalogo_tipo_persona()

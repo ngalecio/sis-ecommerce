@@ -1,11 +1,33 @@
+CREATE TABLE `paciente_imagens`  (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
+  `paciente_id` bigint UNSIGNED NOT NULL,
+  `imagen` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `paciente_imagens_consulta_id_foreign`(`paciente_id` ASC) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+
+select * from paciente_imagens;
+
+
+SELECT * FROM pacientes where cedula = '0908883275'
+
+select * from clientes
+
+INSERT INTO `db-ecommerce`.`clientes` (`nombres`, `apellidos`, `direccion`, `telefono`, `celular`, `cedula`, `ruc`, `email`, `estado`, `es_cliente`, `es_proveedor`, `tipo_identificacion`, `tipo_persona`, `credito_usado`, `credito_saldo`, `cupo_credito`, `tipo_contribuyente`) VALUES ('NORMA', 'TOLEDO', 'LOS CEIBOS', '0991958464', NULL, '0908883275', NULL, 'NORMAARMIJOS@HOTMAIL.COM', NULL, NULL, NULL, 'CEDULA', NULL, NULL, NULL, NULL, NULL);
+
+
+
+
 select precio,precio_compra,stock,stock_fraccion,costo_promedio,unidad_medida,cantidad_por_unidad, 
 a.* from productos a 
 where id = 125
 order by updated_at desc 
 
 select * from kardexes where producto_id = 125
-
-select * frm 
+alter table 
+select * from clientes
 alter table productos add unidad_medida varchar(100)
 alter table productos add cantidad_medida decimal(10,2) 
 alter table productos add cantidad_por_unidad decimal(10,2) 
@@ -13,6 +35,8 @@ alter table productos add stock_fraccion decimal(10,2)
 
 select * from categorias
 
+
+select *from clie
 
 SELECT * FROM productos
 
@@ -26,6 +50,10 @@ WHERE unidad_medida = 'MILILITROS'
 
 select * from productos
 
+select * from comprobante_detalles
+
+
+alter table comprobante_detalles add descripcion varchar(500)
 select * from comprobante_cabeceras
 
 update productos set cantidad_por_unidad = 1
@@ -37,6 +65,14 @@ update productos set costo_promedio = 10.50 where id = 123;
 update productos set costo_promedio = 22.87 where id = 124;
 
 select * from clientes
+
+select * from pacientes order by id desc 
+
+select * from clientes order by id desc 
+
+ALTER TABLE clientes ADD COLUMN paciente_id BIGINT UNSIGNED NULL
+ 
+ALTER TABLE pacientes ADD COLUMN cliente_id BIGINT UNSIGNED NULL
 
 
 select id,nombre,stock,costo_promedio,unidad_medida,cantidad_por_unidad,stock_fraccion 

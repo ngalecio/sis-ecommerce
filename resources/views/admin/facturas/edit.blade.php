@@ -234,183 +234,162 @@
                     </div>
                 </div>
 
-                <div class="accordion" id="accordionExample">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingOne">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                Detalle de Factura
-                            </button>
-                        </h2>
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
+
+                                                <div class="row" hidden>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i class="bi bi-people"></i></span>
+                                                                <textarea name="comentario_2" id="comentario_2" class="form-control" rows="3"
+                                                                    placeholder="Comentario 2">{{ old('comentario_2') }}</textarea>
+                                                            </div>
+                                                            @error('comentario_2')
+                                                            <small class="text-danger">{{ $message }}</small>
+                                                            @enderror
+                                                        </div>
+                                                    </div>
+                                                </div>
 
 
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="producto" class="form-label">Producto</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text"><i class="bi bi-box"></i></span>
-                                                <select class="form-select" id="id-productos-insumos"
-                                                    name="id-productos-insumos" required
-                                                    onchange="actualizarPrecioInsumo()">
 
-                                                    <option value="">-- Seleccione Producto --</option>
-
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="cantidad" class="form-label">Cantidad</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text"><i class="bi bi-123"></i></span>
-                                                <input type="number" class="form-control" id="cantidad" name="cantidad"
-                                                    placeholder="Cantidad">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="descripcion" class="form-label">Descripción</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text"><i class="bi bi-card-text"></i></span>
-                                                <input type="text" class="form-control" id="descripcion"
-                                                    name="descripcion" placeholder="Descripción">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div class="form-group">
-                                            <label for="precio" class="form-label">Precio</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text"><i
-                                                        class="bi bi-currency-dollar"></i></span>
-                                                <input type="number" step="0.01" class="form-control" id="precio"
-                                                    name="precio" placeholder="Precio" disabled>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 d-flex align-items-start">
-                                        <div class="form-group w-100">
-                                            <label class="form-label" style="visibility:hidden;">&nbsp;</label>
-                                            <div class="input-group justify-content-start">
-                                                <button type="button" class="btn btn-success" onclick="agregarInsumo()">
-                                                    <i class="bi bi-plus"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <table class="table table-bordered table-hover table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>#</th>
-                                                    <th>Producto</th>
-                                                    <th>Nombre</th>
-                                                    <th>Cantidad</th>
-                                                    <th>Descripción</th>
-                                                    <th>Precio</th>
-                                                    <th>Total</th>
-                                                    <th class="text-center">Acciones</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="insumos-detalle-tbody">
-                                                <!-- Las filas se llenarán dinámicamente con JS -->
-                                            </tbody>
-
-                                        </table>
-                                        <div id="insumos-detalle-paginacion"
-                                            class="d-flex justify-content-between align-items-center mt-4 px-3">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4 offset-md-8">
-                                        <div class="row">
-                                            <div class="col-6 text-end">
-                                                <label class="fw-bold">Subtotal 0:</label>
-                                            </div>
-                                            <div class="col-6 text-end">
-                                                <span id="insumos-subtotal-cero" class="ms-2">0.00</span>
-                                            </div>
-                                            <div class="col-6 text-end">
-                                                <label id="lbl_subtotal_impuesto" class="fw-bold">Subtotal:</label>
-                                            </div>
-                                            <div class="col-6 text-end">
-                                                <span id="insumos-subtotal-impuesto" class="ms-2">0.00</span>
-                                            </div>
-                                            <div class="col-6 text-end">
-                                                <label class="fw-bold">Descuento:</label>
-                                            </div>
-                                            <div class="col-6 text-end">
-                                                <span id="insumos-descuento" class="ms-2">0.00</span>
-                                            </div>
-                                            <div class="col-6 text-end">
-                                                <label id="lbl_iva" class="fw-bold">IVA (12%):</label>
-                                            </div>
-                                            <div class="col-6 text-end">
-                                                <span id="insumos-iva" class="ms-2">0.00</span>
-                                            </div>
-                                            <div class="col-6 text-end">
-                                                <label class="fw-bold">ICE:</label>
-                                            </div>
-                                            <div class="col-6 text-end">
-                                                <span id="insumos-ice" class="ms-2">0.00</span>
-                                            </div>
-                                            <div class="col-6 text-end">
-                                                <label class="fw-bold">Total + IVA:</label>
-                                            </div>
-                                            <div class="col-6 text-end">
-                                                <span id="insumos-total-iva" class="ms-2">0.00</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingTwo">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                Comentario 2
-                            </button>
-                        </h2>
-                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-
-                                            <div class="input-group">
-                                                <span class="input-group-text"><i class="bi bi-people"></i></span>
-                                                <textarea name="comentario_2" id="comentario_2" class="form-control"
-                                                    rows="3"
-                                                    placeholder="Comentario 2">{{ old('comentario_2') }}</textarea>
-                                            </div>
-                                            @error('comentario_2')
-                                            <small class="text-danger">{{ $message }}</small>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-        
-                </div>
+    
             </div>
         </div>
     </div>
+</div>
+<div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Detalle de Factura</h4>
+
+                </div>
+                <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group">
+                                                            <label for="producto" class="form-label">Producto</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i class="bi bi-box"></i></span>
+                                                                <select class="form-select" id="id-productos-insumos" name="id-productos-insumos" required
+                                                                    onchange="actualizarPrecioInsumo()">
+                                                
+                                                                    <option value="">-- Seleccione Producto --</option>
+                                                
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label for="cantidad" class="form-label">Cantidad</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i class="bi bi-123"></i></span>
+                                                                <input type="number" class="form-control" id="cantidad" name="cantidad" placeholder="Cantidad">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label for="descripcion" class="form-label">Descripción</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                                                                <input type="text" class="form-control" id="descripcion" name="descripcion" placeholder="Descripción">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <div class="form-group">
+                                                            <label for="precio" class="form-label">Precio</label>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text"><i class="bi bi-currency-dollar"></i></span>
+                                                                <input type="number" step="0.01" class="form-control" id="precio" name="precio" placeholder="Precio"
+                                                                    disabled>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2 d-flex align-items-start">
+                                                        <div class="form-group w-100">
+                                                            <label class="form-label" style="visibility:hidden;">&nbsp;</label>
+                                                            <div class="input-group justify-content-start">
+                                                                <button type="button" class="btn btn-success" onclick="agregarInsumo()">
+                                                                    <i class="bi bi-plus"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <table class="table table-bordered table-hover table-striped">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Producto</th>
+                                                                    <th>Nombre</th>
+                                                                    <th>Cantidad</th>
+                                                                    <th>Descripción</th>
+                                                                    <th>Precio</th>
+                                                                    <th>Total</th>
+                                                                    <th class="text-center">Acciones</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody id="insumos-detalle-tbody">
+                                                                <!-- Las filas se llenarán dinámicamente con JS -->
+                                                            </tbody>
+                                                
+                                                        </table>
+                                                        <div id="insumos-detalle-paginacion" class="d-flex justify-content-between align-items-center mt-4 px-3">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 offset-md-8">
+                                                        <div class="row">
+                                                            <div class="col-6 text-end">
+                                                                <label class="fw-bold">Subtotal 0:</label>
+                                                            </div>
+                                                            <div class="col-6 text-end">
+                                                                <span id="insumos-subtotal-cero" class="ms-2">0.00</span>
+                                                            </div>
+                                                            <div class="col-6 text-end">
+                                                                <label id="lbl_subtotal_impuesto" class="fw-bold">Subtotal:</label>
+                                                            </div>
+                                                            <div class="col-6 text-end">
+                                                                <span id="insumos-subtotal-impuesto" class="ms-2">0.00</span>
+                                                            </div>
+                                                            <div class="col-6 text-end">
+                                                                <label class="fw-bold">Descuento:</label>
+                                                            </div>
+                                                            <div class="col-6 text-end">
+                                                                <span id="insumos-descuento" class="ms-2">0.00</span>
+                                                            </div>
+                                                            <div class="col-6 text-end">
+                                                                <label id="lbl_iva" class="fw-bold">IVA (12%):</label>
+                                                            </div>
+                                                            <div class="col-6 text-end">
+                                                                <span id="insumos-iva" class="ms-2">0.00</span>
+                                                            </div>
+                                                            <div class="col-6 text-end">
+                                                                <label class="fw-bold">ICE:</label>
+                                                            </div>
+                                                            <div class="col-6 text-end">
+                                                                <span id="insumos-ice" class="ms-2">0.00</span>
+                                                            </div>
+                                                            <div class="col-6 text-end">
+                                                                <label class="fw-bold">Total + IVA:</label>
+                                                            </div>
+                                                            <div class="col-6 text-end">
+                                                                <span id="insumos-total-iva" class="ms-2">0.00</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                
+                                                </div>
+                </div>
+
+            </div>
+        </div>
 </div>
 @endsection
 
@@ -686,6 +665,15 @@
         const productoSelect = document.getElementById('id-productos-insumos');
         const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
 
+        const tipo_producto = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-tipo-producto') || '';
+
+
+        // Habilitar el input de precio
+        
+        document.getElementById('precio').disabled = true;
+        if (tipo_producto === 'S') {
+            document.getElementById('precio').disabled = false;
+        }
 
         if (precio) {
             document.getElementById('precio').value = parseFloat(precio).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -792,7 +780,7 @@
         }
         // Mostrar loading
         lista_insumos.innerHTML = '<option value="">Cargando...</option>';
-        let url = `/admin/productos/insumos-list`;
+        let url = `/admin/productos/productos-list`;
 
 
         try {
@@ -817,6 +805,7 @@
                     optionSearch.textContent = `${insumo.codigo} - ${insumo.nombre}`;
                     optionSearch.setAttribute('data-nombre', insumo.nombre);
                     optionSearch.setAttribute('data-precio', insumo.precio);
+                    optionSearch.setAttribute('data-tipo-producto', insumo.tipo_producto);
                     lista_insumos.appendChild(optionSearch);
                 });
                 initSelect2(lista_insumos);
@@ -880,7 +869,9 @@
         const nombre = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-nombre') || '';
         const cantidad = document.getElementById('cantidad').value;
         const descripcion = document.getElementById('descripcion').value;
-        const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
+        const precio = document.getElementById('precio').value;
+
+        
         if (!producto || !nombre || !cantidad || !descripcion || !precio) {
             alert('Complete todos los campos de insumo.');
             return;
@@ -903,6 +894,7 @@
         document.getElementById('cantidad').value = '';
         document.getElementById('descripcion').value = '';
         document.getElementById('precio').value = '';
+        document.getElementById('precio').disabled = true;
     }
 
     // Renderiza la tabla de insumos desde el array
@@ -1250,7 +1242,7 @@
                                 producto_id: detalle.producto_id,
                                 nombre: detalle.producto.nombre,
                                 cantidad: detalle.cantidad,
-                                descripcion: detalle.producto.descripcion,
+                                descripcion: detalle.observacion || '',
                                 precio: detalle.precio,
                                 total: detalle.total
                             });

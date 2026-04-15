@@ -19,6 +19,32 @@ class ProductoController extends Controller
      * Display a listing of the resource.
      */
 
+    public function listJsonProductos()
+    {
+
+        $productos = Producto::select(
+            'id',
+            'codigo',
+            'nombre',
+            'precio',
+            'stock',
+            'precio_compra',
+            'unidad_medida',
+            'cantidad_por_unidad',
+            'stock_fraccion',
+            'tipo_producto'
+        )
+            ->whereIN('tipo_producto', ['B','S'])
+            ->where('estado', 'A')
+            //   ->take(10)->orderBy('id','desc')
+            ->get();
+
+
+
+        return response()->json([
+            'data' => $productos,
+        ]);
+    }
     public function listJsonInsumos()
     {
 

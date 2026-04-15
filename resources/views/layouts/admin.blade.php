@@ -161,6 +161,12 @@
                                     </a>
                                 </li>
                                 <li class="submenu-item">
+                                    <a href="{{url('/admin/proveedores')}}" class='submenu-link'>
+                                        <i class="bi bi-truck"></i>
+                                        <span>Proveedor</span>
+                                    </a>
+                                </li>
+                                <li class="submenu-item">
                                     <a href="{{url('/admin/ajustes')}}" class='submenu-link'>
                                         <i class="bi bi-gear"></i>
                                         <span>Ajustes</span>
@@ -200,37 +206,35 @@
 
                             <a href="#" class='sidebar-link'>
                                 <i class="bi bi-collection-fill"></i>
-                                <span>Consultorio</span>
+                                <span>Salon</span>
                             </a>
                             <ul class="submenu ">
                                 <li class="submenu-item">
                                     <a href="{{url('/admin/pacientes')}}" class='submenu-link'>
                                         <i class="bi bi-person-circle"></i>
-                                        <span>Pacientes</span>
+                                        <span>Clientes</span>
                                     </a>
                                 </li>
-                                <li class="submenu-item">
+                                <!-- <li class="submenu-item">
                                     <a href="{{url('/admin/clientes')}}" class='submenu-link'>
                                         <i class="bi bi-people"></i>
                                         <span>Clientes</span>
                                     </a>
-                                </li>
+                                </li> -->
                                 <li class="submenu-item">
                                     <a href="{{url('/admin/facturas')}}" class='submenu-link'>
                                         <i class="bi bi-cash-stack"></i>
                                         <span>Facturas</span>
                                     </a>
                                 </li>
+
                                 <li class="submenu-item">
-                                    <a href="account-security.html" class="submenu-link">
-                                        <i class="bi bi-capsule"></i>
-                                        <span>Medicamentos</span></a>
-                                </li>
-                                <li class="submenu-item">
-                                    <a href="account-security.html" class="submenu-link">
+                                    <a href="{{url('/admin/consultas')}}" class='submenu-link'>
                                         <i class="bi bi-person-hearts"></i>
-                                        <span>Atenciones</span></a>
+                                        <span>Atenciones</span>
+                                    </a>
                                 </li>
+
                             </ul>
 
                         </li>
