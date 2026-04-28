@@ -1,3 +1,20 @@
+select * from productos
+
+select * from comprobante_cabeceras where tipo_comprobante = 'FA'
+select * from consultas
+
+select * from producto_imagens
+
+select * from ajustes
+
+logos/KNT3GE5Bq8pYxWbqGouLs7P4NPp9eEIWDmKMHjJx.png
+logos/wkHHkGNqzZnE05WCfReOGwAb4IJhMqDbeXWqgOvr.png
+
+SHSAh1byW44dGbHlFSP1LPddTtcNYVhe8sZHfgqi.png
+
+imagen_login/SHSAh1byW44dGbHlFSP1LPddTtcNYVhe8sZHfgqi.png
+
+
 CREATE TABLE `paciente_imagens`  (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `paciente_id` bigint UNSIGNED NOT NULL,
@@ -83,6 +100,23 @@ update productos set stock_fraccion = 0,stock = 150, costo_promedio = 24
 delete from kardexes;
 
 SELECT * FROm kardexes where producto_id in (125)
+
+
+select * from clientes c join pacientes p on c.cedula = p.cedula;
+
+
+update c 
+set c.paciente_id = p.id 
+FROM 
+clientes c join pacientes p on c.cedula = p.cedula;
+
+UPDATE clientes c
+JOIN pacientes p ON c.cedula = p.cedula
+SET c.paciente_id = p.id;
+
+UPDATE pacientes p
+JOIN clientes c ON p.cedula = c.cedula
+SET p.cliente_id = c.id;
 
 
 

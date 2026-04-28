@@ -290,7 +290,8 @@
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleFotoClienteLabel">Subir Imagen</h5>
+                                                        <h5 class="modal-title" id="exampleFotoClienteLabel">Subir
+                                                            Imagen</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                     </div>
@@ -386,7 +387,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="id-consulta" class="form-label">N° Atención</label>
                                             <div class="input-group">
@@ -396,7 +397,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="fecha_consulta" class="form-label">Fecha de Atención</label>
                                             <div class="input-group">
@@ -411,7 +412,7 @@
                                             @enderror
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <div class="form-group">
                                             <label for="tipo_consulta" class="form-label">Tipo de Atención</label>
                                             <div class="input-group">
@@ -435,16 +436,39 @@
                                             @enderror
                                         </div>
                                     </div>
+
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="tipo_consulta" class="form-label">Tiene Caidas de
+                                                Cabello?</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="bi bi-list-check"></i></span>
+                                                <select name="comentario_4" id="comentario_4" class="form-select"
+                                                    required>
+                                                    <option value="">-- Seleccione --</option>
+                                                    <option value="SI" {{ old('comentario_4')=='SI' ? 'selected' : ''
+                                                        }}>
+                                                        SI</option>
+                                                    <option value="NO" {{ old('comentario_4')=='NO' ? 'selected' : ''
+                                                        }}>
+                                                        NO</option>
+                                                </select>
+                                            </div>
+                                            @error('comentario_4')
+                                            <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="medicamentos" class="form-label">Medicamentos</label>
+                                            <label for="medicamentos" class="form-label">Productos que usa</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="bi bi-capsule"></i></span>
                                                 <textarea name="medicamentos" id="medicamentos" class="form-control"
                                                     rows="3"
-                                                    placeholder="Ingrese Medicamentos">{{ old('medicamentos') }}</textarea>
+                                                    placeholder="Ingrese Productos que usa">{{ old('medicamentos') }}</textarea>
                                             </div>
                                             @error('medicamentos')
                                             <small class="text-danger">{{ $message }}</small>
@@ -454,14 +478,14 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="antecedentes_personales" class="form-label">Antecedentes
-                                                Patologicos
-                                                Personales</label>
+                                            <label for="antecedentes_personales" class="form-label">
+                                                Antecedentes de Procesos Químicos
+                                            </label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="bi bi-file-medical"></i></span>
                                                 <textarea name="antecedentes-personales" id="antecedentes-personales"
                                                     class="form-control" rows="3"
-                                                    placeholder="Antecedentes">{{ old('antecedentes-personales') }}</textarea>
+                                                    placeholder="Antecedentes de Procesos Químicos">{{ old('antecedentes-personales') }}</textarea>
                                             </div>
                                             @error('antecedentes-personales')
                                             <small class="text-danger">{{ $message }}</small>
@@ -487,13 +511,13 @@
 
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label for="antecedentes_familiares" class="form-label">Antecedentes
-                                                Familiares</label>
+                                            <label for="antecedentes_familiares" class="form-label">
+                                                Historia Capilar</label>
                                             <div class="input-group">
                                                 <span class="input-group-text"><i class="bi bi-people"></i></span>
                                                 <textarea name="antecedentes-familiares" id="antecedentes-familiares"
                                                     class="form-control" rows="3"
-                                                    placeholder="Antecedentes Familiares">{{ old('antecedentes-familiares') }}</textarea>
+                                                    placeholder="Historia capilar">{{ old('antecedentes-familiares') }}</textarea>
                                             </div>
                                             @error('antecedentes-familiares')
                                             <small class="text-danger">{{ $message }}</small>
@@ -502,6 +526,54 @@
                                     </div>
                                 </div>
 
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="comentario_1" class="form-label">Tipo de Cabello</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i
+                                                        class="bi bi-exclamation-triangle"></i></span>
+                                                <textarea name="comentario_1" id="comentario_1" class="form-control"
+                                                    rows="3"
+                                                    placeholder="Ingrese Tipo de Cabello">{{ old('comentario_1') }}</textarea>
+                                            </div>
+                                            @error('comentario_1')
+                                            <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="comentario_2" class="form-label">
+                                                Procesos Químicos Realizados</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="bi bi-people"></i></span>
+                                                <textarea name="comentario_2" id="comentario_2" class="form-control"
+                                                    rows="3"
+                                                    placeholder="Ingrese Procesos quimicos realizados..">{{ old('comentario_2') }}</textarea>
+                                            </div>
+                                            @error('comentario_2')
+                                            <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="comentario_3" class="form-label">
+                                                Observaciones</label>
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="bi bi-people"></i></span>
+                                                <textarea name="comentario_3" id="comentario_3" class="form-control"
+                                                    rows="3"
+                                                    placeholder="Ingrese Comentarios">{{ old('comentario_2') }}</textarea>
+                                            </div>
+                                            @error('comentario_3')
+                                            <small class="text-danger">{{ $message }}</small>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="accordion" id="accordionExample">
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingOne">
@@ -514,23 +586,7 @@
                                         <div id="collapseOne" class="accordion-collapse collapse show"
                                             aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
-                                                <div class="row" hidden>
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
 
-                                                            <div class="input-group">
-                                                                <span class="input-group-text"><i
-                                                                        class="bi bi-people"></i></span>
-                                                                <textarea name="comentario_1" id="comentario_1"
-                                                                    class="form-control" rows="3"
-                                                                    placeholder="Evolución Medica">{{ old('comentario_1') }}</textarea>
-                                                            </div>
-                                                            @error('comentario_1')
-                                                            <small class="text-danger">{{ $message }}</small>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
-                                                </div>
 
                                                 <div class="row">
                                                     <div class="col-md-3">
@@ -673,23 +729,7 @@
                                             aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
 
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
 
-                                                            <div class="input-group">
-                                                                <span class="input-group-text"><i
-                                                                        class="bi bi-people"></i></span>
-                                                                <textarea name="comentario_2" id="comentario_2"
-                                                                    class="form-control" rows="3"
-                                                                    placeholder="Comentario 2">{{ old('comentario_2') }}</textarea>
-                                                            </div>
-                                                            @error('comentario_2')
-                                                            <small class="text-danger">{{ $message }}</small>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -704,57 +744,11 @@
                                         <div id="collapseThree" class="accordion-collapse collapse"
                                             aria-labelledby="headingThree" data-bs-parent="#accordionExample">
                                             <div class="accordion-body">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
 
-                                                            <div class="input-group">
-                                                                <span class="input-group-text"><i
-                                                                        class="bi bi-people"></i></span>
-                                                                <textarea name="comentario_3" id="comentario_3"
-                                                                    class="form-control" rows="3"
-                                                                    placeholder="Comentario 3">{{ old('comentario_3') }}</textarea>
-                                                            </div>
-                                                            @error('comentario_3')
-                                                            <small class="text-danger">{{ $message }}</small>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="accordion-item" hidden>
-                                        <h2 class="accordion-header" id="headingFour">
-                                            <button class="accordion-button collapsed" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#collapseFour"
-                                                aria-expanded="false" aria-controls="collapseFour">
-                                                Diagnostico
-                                            </button>
-                                        </h2>
-                                        <div id="collapseFour" class="accordion-collapse collapse"
-                                            aria-labelledby="headingFour" data-bs-parent="#accordionExample">
-                                            <div class="accordion-body">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="form-group">
 
-                                                            <div class="input-group">
-                                                                <span class="input-group-text"><i
-                                                                        class="bi bi-people"></i></span>
-                                                                <textarea name="comentario_4" id="comentario_4"
-                                                                    class="form-control" rows="3"
-                                                                    placeholder="Diagnostico">{{ old('comentario_4') }}</textarea>
-                                                            </div>
-                                                            @error('comentario_4')
-                                                            <small class="text-danger">{{ $message }}</small>
-                                                            @enderror
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="accordion-item">
                                         <h2 class="accordion-header" id="headingFive">
                                             <button class="accordion-button collapsed" type="button"
@@ -929,11 +923,11 @@
                                     <th>ID Atención</th>
                                     <th>Fecha</th>
                                     <th>Tipo Atención</th>
-                                    <th>Medicamentos</th>
-                                    <th>Antecedentes Familiares</th>
+                                    <th>Productos que usa</th>
+                                    <th>Historia Capilar</th>
                                     <th>Alergias</th>
-                                    <th>Antecedentes Personales</th>
-                                    <th>Diagnóstico</th>
+                                    <th>Antecedentes de Procesos Químicos</th>
+                                    <th>Tiene Caídas</th>
                                     <th class="text-center">Acciones</th>
                                 </tr>
                             </thead>
@@ -953,20 +947,20 @@
         </div>
     </div>
 </div>
-                                        <div class="modal fade" id="imagen_maximizada" tabindex="-1" aria-labelledby="imagenLabel_20" aria-hidden="true">
-                                            <div class="modal-dialog modal-fullscreen modal-dialog-centered">
-                                                <div class="modal-content" style="background: transparent; border: none;">
-                                                    <div class="modal-header" style="border: none;">
-                                                        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body d-flex justify-content-center align-items-center p-0" style="height: 100vh;">
-                                                        <img src="" alt="Imagen del Producto"
-                                                            style="width: 100vw; height: 100vh; object-fit: contain; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+<div class="modal fade" id="imagen_maximizada" tabindex="-1" aria-labelledby="imagenLabel_20" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+        <div class="modal-content" style="background: transparent; border: none;">
+            <div class="modal-header" style="border: none;">
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-center align-items-center p-0" style="height: 100vh;">
+                <img src="" alt="Imagen del Producto"
+                    style="width: 100vw; height: 100vh; object-fit: contain; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @push('scripts')
@@ -1499,48 +1493,48 @@
         });
     }
 
-        function preguntarCliente(id, event) {
-                event.preventDefault();
-                Swal.fire({
-                    title: '¿Estás seguro de eliminar esta imagen?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Eliminar',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        eliminarImagenCliente(id);
-                    }
-                });
+    function preguntarCliente(id, event) {
+        event.preventDefault();
+        Swal.fire({
+            title: '¿Estás seguro de eliminar esta imagen?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Eliminar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                eliminarImagenCliente(id);
             }
+        });
+    }
 
-                function eliminarImagenCliente(imagenId) {
-                        // alert('Eliminar imagen con ID: ' + imagenId);
-                        fetch(`/admin/pacientes/${imagenId}/remove_imagen`, {
-                            method: 'DELETE',
-                            headers: {
-                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                'Accept': 'application/json'
-                            }
-                        })
-                            .then(response => {
-                                if (!response.ok) {
-                                    return response.json().then(err => Promise.reject(err));
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                alert('Imagen eliminada correctamente');
-                                consultar_fotos_paciente();
-                                //  location.reload();
-                            })
-                            .catch(error => {
-                                alert('Error al eliminar la imagen');
-                                console.error(error);
-                            });
-                    }
+    function eliminarImagenCliente(imagenId) {
+        // alert('Eliminar imagen con ID: ' + imagenId);
+        fetch(`/admin/pacientes/${imagenId}/remove_imagen`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => Promise.reject(err));
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Imagen eliminada correctamente');
+                consultar_fotos_paciente();
+                //  location.reload();
+            })
+            .catch(error => {
+                alert('Error al eliminar la imagen');
+                console.error(error);
+            });
+    }
     function eliminarImagenConsulta(imagenId) {
         // alert('Eliminar imagen con ID: ' + imagenId);
         fetch(`/admin/consultas/${imagenId}/remove_imagen`, {
@@ -1568,7 +1562,7 @@
     }
     function mostrarImagenMaximizada(imagenId, imagenUrl) {
 
-      //  alert('Mostrar imagen ID: ' + imagenId + ', URL: ' + imagenUrl);
+        //  alert('Mostrar imagen ID: ' + imagenId + ', URL: ' + imagenUrl);
 
 
         // var myModal = new bootstrap.Modal(document.getElementById('imagen_maximizada'), {
@@ -1591,52 +1585,52 @@
     }
 
 
-       function subirImagenCliente() {
-            const formData = new FormData();
-            const imagenInput = document.getElementById('imagenCliente');
+    function subirImagenCliente() {
+        const formData = new FormData();
+        const imagenInput = document.getElementById('imagenCliente');
 
-            const paciente_id = document.getElementById('id-paciente') ? document.getElementById('id-paciente').value : '';
-            
-            if (!imagenInput.files.length) {
-                alert('Seleccione una imagen para subir.');
-                return;
-            }
+        const paciente_id = document.getElementById('id-paciente') ? document.getElementById('id-paciente').value : '';
 
-              alert('Subiendo imagen para paciente ID: ' + paciente_id );
-
-            formData.append('imagen', imagenInput.files[0]);
-            formData.append('paciente_id', paciente_id);
-            formData.append('consulta_id', 0);
-            formData.append('_token', '{{ csrf_token() }}');
-
-          //  let url = `/admin/consultas/${consulta_id || 0}/upload_imagen`;
-              let url = `/admin/pacientes/${paciente_id || 0}/upload_imagen`;
-            fetch(url, {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        return response.json().then(err => Promise.reject(err));
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    alert('Imagen del Cliente subida correctamente');
-
-                    // Cerrar el modal después de subir la imagen
-                    var modalElement = document.getElementById('exampleFotoCliente');
-                    var modalInstance = bootstrap.Modal.getInstance(modalElement);
-                    if (modalInstance) {
-                        modalInstance.hide();
-                    }
-                    consultar_fotos_paciente();
-                })
-                .catch(error => {
-                    alert('Error al subir la imagen', error.message || JSON.stringify(error));
-                    console.error(error);
-                });
+        if (!imagenInput.files.length) {
+            alert('Seleccione una imagen para subir.');
+            return;
         }
+
+        alert('Subiendo imagen para paciente ID: ' + paciente_id);
+
+        formData.append('imagen', imagenInput.files[0]);
+        formData.append('paciente_id', paciente_id);
+        formData.append('consulta_id', 0);
+        formData.append('_token', '{{ csrf_token() }}');
+
+        //  let url = `/admin/consultas/${consulta_id || 0}/upload_imagen`;
+        let url = `/admin/pacientes/${paciente_id || 0}/upload_imagen`;
+        fetch(url, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => Promise.reject(err));
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('Imagen del Cliente subida correctamente');
+
+                // Cerrar el modal después de subir la imagen
+                var modalElement = document.getElementById('exampleFotoCliente');
+                var modalInstance = bootstrap.Modal.getInstance(modalElement);
+                if (modalInstance) {
+                    modalInstance.hide();
+                }
+                consultar_fotos_paciente();
+            })
+            .catch(error => {
+                alert('Error al subir la imagen', error.message || JSON.stringify(error));
+                console.error(error);
+            });
+    }
     function subirImagen() {
         const formData = new FormData();
         const imagenInput = document.getElementById('imagen');
@@ -1855,11 +1849,16 @@
     function registrar_cita() {
 
 
-
         const idConsulta = document.getElementById('id-consulta').value || '0';
         const accion = idConsulta === '0' ? 'I' : 'M';
         const idPaciente = document.getElementById('id-paciente').value;
         console.log('Insumos detalle a enviar:', insumosDetalle);
+
+        const comentario_4 = document.getElementById('comentario_4').value;
+        if (comentario_4 === null || comentario_4 === undefined || comentario_4 === '') {
+            alert('Debe seleccionar si tiene caídas de cabello');
+            return;
+        }
 
         const data = {
             accion: accion,
@@ -1874,7 +1873,7 @@
             comentario_1: document.getElementById('comentario_1').value,
             comentario_2: document.getElementById('comentario_2').value,
             comentario_3: document.getElementById('comentario_3').value,
-            comentario_4: document.getElementById('comentario_4').value,
+            comentario_4: comentario_4,
             detalles: insumosDetalle
         };
 
@@ -1910,37 +1909,37 @@
             });
     }
 
-        function consultar_fotos_paciente() {
-                const idPaciente = document.getElementById('id-paciente').value;
-                 //alert('Consultar fotos del paciente: ' + idPaciente);
+    function consultar_fotos_paciente() {
+        const idPaciente = document.getElementById('id-paciente').value;
+        //alert('Consultar fotos del paciente: ' + idPaciente);
 
 
-                // Lógica para cargar los datos y mostrar el modal de edición de catálogo detalle
-                fetch(`/admin/pacientes/${idPaciente}/imagenes`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // console.log('Datos recibidos para consulta:', data);
-                        if (data.success) {
-                            if (!data.data) {
-                                alert("Paciente no existe");
-                                return;
-                            }
-                          //  console.log('Datos del paciente:', data.data);
-                            // Asumiendo que tienes un modal y formulario para editar catálogo detalle
-                    
+        // Lógica para cargar los datos y mostrar el modal de edición de catálogo detalle
+        fetch(`/admin/pacientes/${idPaciente}/imagenes`)
+            .then(response => response.json())
+            .then(data => {
+                // console.log('Datos recibidos para consulta:', data);
+                if (data.success) {
+                    if (!data.data) {
+                        alert("Paciente no existe");
+                        return;
+                    }
+                    //  console.log('Datos del paciente:', data.data);
+                    // Asumiendo que tienes un modal y formulario para editar catálogo detalle
 
 
-                            if (Array.isArray(data.data) && data.data.length > 0) {
-                                // Renderiza las imágenes en la galería
-                                // const galeriaRow = document.querySelector('#collapseFive .row');
-                                const galeriaRow = document.getElementById('id_galeria_cliente');
-                                if (galeriaRow) {
-                                    galeriaRow.innerHTML = '';
-                                    data.data.forEach(imagen => {
-                                        const col = document.createElement('div');
-                                        col.className = 'col-md-3';
-                                        col.style.marginBottom = '20px';
-                                        col.innerHTML = `
+
+                    if (Array.isArray(data.data) && data.data.length > 0) {
+                        // Renderiza las imágenes en la galería
+                        // const galeriaRow = document.querySelector('#collapseFive .row');
+                        const galeriaRow = document.getElementById('id_galeria_cliente');
+                        if (galeriaRow) {
+                            galeriaRow.innerHTML = '';
+                            data.data.forEach(imagen => {
+                                const col = document.createElement('div');
+                                col.className = 'col-md-3';
+                                col.style.marginBottom = '20px';
+                                col.innerHTML = `
                                         <div class="card shadow" style="box-shadow: 0 0 0 2px #0d6efd;">
                                             <a href="#" onclick="mostrarImagenMaximizada('${imagen.id}', '${imagen.imagen}')">
                                                 <img src="${imagen.url || '/storage/' + imagen.imagen}" class="card-img-top" alt="Imagen del Producto"
@@ -1954,37 +1953,37 @@
                                             </div>
                                         </div>
                                     `;
-                                        galeriaRow.appendChild(col);
-                                    });
-                                }
-                            } else {
-                                const galeriaRow = document.getElementById('id_galeria_cliente');
-
-                                if (galeriaRow) {
-                                    galeriaRow.innerHTML = '';
-                                    galeriaRow.innerHTML = `<div class="col-12 text-center text-muted py-4">No hay imágenes registradas.</div>`;
-                                }
-                            }
-
-
-    
-                 
-                   
-
-                            // Cambiar el tab actual a "paciente-consulta"
-                            // var tabTrigger = document.querySelector('a#paciente-consulta-tab');
-                            // if (tabTrigger) {
-                            //     var tab = new bootstrap.Tab(tabTrigger);
-                            //     tab.show();
-                            // }
-                        } else {
-                            alert("Error al cargar los datos de las fotos del paciente");
+                                galeriaRow.appendChild(col);
+                            });
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-            }
+                    } else {
+                        const galeriaRow = document.getElementById('id_galeria_cliente');
+
+                        if (galeriaRow) {
+                            galeriaRow.innerHTML = '';
+                            galeriaRow.innerHTML = `<div class="col-12 text-center text-muted py-4">No hay imágenes registradas.</div>`;
+                        }
+                    }
+
+
+
+
+
+
+                    // Cambiar el tab actual a "paciente-consulta"
+                    // var tabTrigger = document.querySelector('a#paciente-consulta-tab');
+                    // if (tabTrigger) {
+                    //     var tab = new bootstrap.Tab(tabTrigger);
+                    //     tab.show();
+                    // }
+                } else {
+                    alert("Error al cargar los datos de las fotos del paciente");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
     function consultar_cita() {
         const idConsulta = document.getElementById('id-consulta').value;
         // alert('Consultar atención para el ID de consulta: ' + idConsulta);

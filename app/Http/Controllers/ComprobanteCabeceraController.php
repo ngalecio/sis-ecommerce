@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ajuste;
 use App\Models\CatalogoDetalle;
 use App\Models\ComprobanteCabecera;
 use App\Models\ComprobanteDetalle;
@@ -46,7 +47,7 @@ class ComprobanteCabeceraController extends Controller
         } else {
             $fecha_desde = date('Y-m-01');
             $fecha_hasta = date('Y-m-t');
-            //$query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+            $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
         }
 
         if ($buscar) {
@@ -262,7 +263,7 @@ class ComprobanteCabeceraController extends Controller
             });
 
         }
-        $query->orderBy('fecha', 'desc');
+        $query->orderBy('fecha', 'desc')->orderBy('id', 'desc');
 
 
 
@@ -313,7 +314,7 @@ class ComprobanteCabeceraController extends Controller
             $comprobanteCabecera->estado3 = 'GEN';
             $comprobanteCabecera->valor_subtotal_cero = $request->valor_subtotal_cero ?? 0;
             $comprobanteCabecera->valor_subtotal_iva = $request->valor_subtotal_iva ?? 0;
-            $comprobanteCabecera->valor_subtotal = $request->valor_subtotal ?? 0;
+            $comprobanteCabecera->valor_subtotal = ($request->valor_subtotal_cero ?? 0)+($request->valor_subtotal_iva ?? 0);
             $comprobanteCabecera->valor_descuento = $request->valor_descuento ?? 0;
             $comprobanteCabecera->valor_iva = $request->valor_iva ?? 0; 
             $comprobanteCabecera->valor_total = $request->valor_total ?? 0;
@@ -428,6 +429,118 @@ class ComprobanteCabeceraController extends Controller
             DB::rollBack();
             return response()->json(['success' => false, 'message' => 'Error al actualizar la consulta.', 'error' => $e->getMessage()], 500);
         }
+    }
+
+    public function reportefacturaspdf(Request $request)
+    {
+
+    //return $request;
+        $buscar = $request->get('search');
+        $fecha_desde = $request->get('fecha-desde');
+        $fecha_hasta = $request->get('fecha-hasta');
+
+        // Consulta Eloquent con relación a Cliente
+        $query = ComprobanteCabecera::with('cliente:id,nombres,apellidos,cedula,telefono,email')
+            ->select('id', 'tipo_comprobante', 'cliente_id', 'fecha', 'valor_subtotal', 'valor_iva', 'valor_total', 'estado1', 'estado2', 'estado3', 'numero_comprobante')
+            ->where('tipo_comprobante', 'FA');
+
+
+
+
+        if ($fecha_desde && $fecha_hasta) {
+
+            $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+        } else {
+            $fecha_desde = date('Y-m-01');
+            $fecha_hasta = date('Y-m-t');
+            //$query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+        }
+
+        if ($buscar) {
+
+
+            $query->whereHas('cliente', function ($q) use ($buscar) {
+                $q->where('nombres', 'like', '%' . $buscar . '%')
+                    ->orWhere('apellidos', 'like', '%' . $buscar . '%')
+                    ->orWhere('cedula', 'like', '%' . $buscar . '%');
+            });
+        }
+        $query->orderBy('fecha', 'desc');
+
+        $facturas = $query->orderBy('fecha', 'asc')->get();
+
+        $ajuste = Ajuste::first();
+        // return "Reporte PDF - Estado: $estado, Search: $search";
+
+        $pdf = Pdf::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'DejaVu Sans',
+            'isPhpEnabled' => true // IMPORTANTE: Habilitar PHP en DOMPDF
+        ]);
+
+        $pdf->loadView('admin.facturas.reportepdf', compact('facturas', 'ajuste'));
+        $pdf->setPaper('a4', 'landscape');
+
+        $nombreArchivo = 'rpt_facturas_' . now()->format('Ymd_His') . '.pdf';
+
+        return $pdf->stream($nombreArchivo);
+    }
+    public function reportecompraspdf(Request $request)
+    {
+
+        $buscar = $request->get('search');
+        $fecha_desde = $request->get('fecha-desde');
+        $fecha_hasta = $request->get('fecha-hasta');
+
+
+
+        // Consulta Eloquent con relación a Cliente
+        $query = ComprobanteCabecera::with('cliente:id,nombres,apellidos,cedula,telefono,email')
+            ->select('id', 'tipo_comprobante', 'cliente_id', 'fecha', 'valor_subtotal', 'valor_iva', 'valor_total', 'estado1', 'estado2', 'estado3', 'numero_comprobante')
+            ->where('tipo_comprobante', 'CO');
+
+
+
+
+        if ($fecha_desde && $fecha_hasta) {
+
+            $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+        } else {
+            $fecha_desde = date('Y-m-01');
+            $fecha_hasta = date('Y-m-t');
+            //$query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+        }
+
+        if ($buscar) {
+
+
+            $query->whereHas('cliente', function ($q) use ($buscar) {
+                $q->where('nombres', 'like', '%' . $buscar . '%')
+                    ->orWhere('apellidos', 'like', '%' . $buscar . '%')
+                    ->orWhere('cedula', 'like', '%' . $buscar . '%');
+            });
+        }
+        $query->orderBy('fecha', 'desc');
+
+        $compras = $query->orderBy('fecha', 'asc')->get();
+
+        $ajuste = Ajuste::first();
+        // return "Reporte PDF - Estado: $estado, Search: $search";
+      
+        $pdf = Pdf::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'DejaVu Sans',
+            'isPhpEnabled' => true // IMPORTANTE: Habilitar PHP en DOMPDF
+        ]);
+
+        $pdf->loadView('admin.compras.reportepdf', compact('compras', 'ajuste'));
+        $pdf->setPaper('a4', 'landscape');
+
+        $nombreArchivo = 'rpt_compras_' . now()->format('Ymd_His') . '.pdf';
+
+        return $pdf->stream($nombreArchivo);
     }
     /**
      * Display a listing of the resource.

@@ -196,6 +196,8 @@ Route::delete('/admin/pacientes/{id}/remove_imagen', [PacienteController::class,
 
 
 Route::get('/admin/consultas', [ConsultaController::class, 'lista_atenciones'])->name('admin.consultas.index')->middleware('auth');
+Route::get('/admin/consultas/reporteconsultaspdf', [ConsultaController::class, 'reporteconsultaspdf'])->name('admin.consultas.reportepdf')->middleware('auth');
+
 Route::get('/admin/consultas/list', [ConsultaController::class, 'listJson'])->name('admin.consultas.list')->middleware('auth');
 Route::get('/admin/consultas/{id}', [ConsultaController::class, 'show'])->name('admin.consultas.show')->middleware('auth');
 Route::get('/admin/consultas/{id}/edit', [ConsultaController::class, 'edit'])->name('admin.consultas.edit')->middleware('auth');
@@ -207,12 +209,16 @@ Route::delete('/admin/consultas/{id}/remove_imagen', [ConsultaController::class,
 
 Route::get('/admin/compras', [ComprobanteCabeceraController::class, 'lista_compras'])->name('admin.compras.index')->middleware('auth');
 Route::put('/admin/compras/registrar/{id}', [ComprobanteCabeceraController::class, 'registrarCompra'])->name('admin.compras.registrar')->middleware('auth');
+Route::get('/admin/compras/reportecompraspdf', [ComprobanteCabeceraController::class, 'reportecompraspdf'])->name('admin.productos.reportecompraspdf')->middleware('auth');
+
 Route::get('/admin/compras/{id}', [ComprobanteCabeceraController::class, 'showCompra'])->name('admin.compras.show')->middleware('auth');
 Route::get('/admin/compras/{id}/edit', [ComprobanteCabeceraController::class, 'edit'])->name('admin.compras.edit')->middleware('auth');
 
 
 Route::get('/admin/facturas', [ComprobanteCabeceraController::class, 'lista_facturas'])->name('admin.facturas.index')->middleware('auth');
 Route::put('/admin/facturas/registrar/{id}', [ComprobanteCabeceraController::class, 'registrarFactura'])->name('admin.facturas.registrar')->middleware('auth');
+Route::get('/admin/facturas/reportefacturaspdf', [ComprobanteCabeceraController::class, 'reportefacturaspdf'])->name('admin.facturas.reportefacturaspdf')->middleware('auth');
+
 Route::get('/admin/facturas/{id}', [ComprobanteCabeceraController::class, 'showFactura'])->name('admin.facturas.show')->middleware('auth');
 Route::get('/admin/facturas/{id}/edit', [ComprobanteCabeceraController::class, 'editFactura'])->name('admin.facturas.edit')->middleware('auth');
 //Route::get('/admin/catalogos2', [CatalogoController::class, 'listJson'])->name('admin.catalogos2.index')->middleware('auth');

@@ -5,8 +5,18 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header">
-                <h4>Compras Registrados
+                <h4>Compras Registradas
+                    <a href="{{ url('/admin/compras/0/edit') }}" style="float: right; margin-left: 10px;"
+                        class="btn btn-primary">
+                        <i class="bi bi-plus"></i> Crear Nuevo</a>
+                    <button id="btn-crear-pdf" type="button" class="btn btn-primary"
+                        style="float: right; margin-left: 10px;" onclick="reporte_compras_pdf()">
+                        <i class="bi bi-file-earmark-pdf"></i> PDF
+                    </button>
                 </h4>
+
+            </div>
+            <div class="card-body">
                 <form action="{{ url('/admin/compras') }}" method="GET">
                     <div class="row">
 
@@ -46,105 +56,88 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-2 d-flex justify-content-end align-items-end" style="padding-top: 24px;">
-                            <div class="form-group">
-                                <a href="{{ url('/admin/compras/0/edit') }}" style="float: right;"
-                                    class="btn btn-primary">
-                                    <i class="bi bi-plus"></i> Crear Nuevo</a>
-                            </div>
-                        </div>
+
 
                 </form>
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Comprobante</th>
+                            <th>Proveedor</th>
+                            <th>Fecha</th>
+                            <th>Subtotal</th>
+                            <th>Iva</th>
+                            <th>Total</th>
 
 
-                <!-- <div class="row">
-                                                            <div class="col-md-6">
-                                                                <form action="{{ url('/admin/compras') }}" method="GET">
-                                                                    <div class="input-group">
-                                                                        <input type="text" name="search" class="form-control" placeholder="Buscar compra..."
-                                                                            value="{{ request('search') }}">
-                                                                        <button type="submit" class="btn btn-primary">Buscar</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div> -->
-            </div>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($compras as $compra)
+                        <tr>
+                            <td>{{ ($compras->currentPage() -1)*$compras->perPage()+$loop->iteration }}</td>
+                            <td>{{ $compra->numero_comprobante }}</td>
+                            <td>{{ $compra->cliente->apellidos }} {{ $compra->cliente->nombres }}</td>
+                            <td>{{ \Carbon\Carbon::parse($compra->fecha)->format('d/m/Y') }}</td>
+                            <td>$ {{ number_format($compra->valor_subtotal, 2, '.', ',') }}</td>
+                            <td>$ {{ number_format($compra->valor_iva, 2, '.', ',') }}</td>
+                            <td>$ {{ number_format($compra->valor_total, 2, '.', ',') }}</td>
 
+                            <td class="text-center">
+                                <a href="{{ url('/admin/compras/'.$compra->id) }}" class="btn btn-sm btn-info ">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="{{ url('/admin/compras/'.$compra->id.'/edit') }}"
+                                    class="btn btn-sm btn-success "><i class="bi bi-pencil"></i>
 
-            <table class="table table-bordered table-hover table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Comprobante</th>
-                        <th>Proveedor</th>
-                        <th>Fecha</th>
-                        <th>Subtotal</th>
-                        <th>Iva</th>
-                        <th>Total</th>
-
-
-                        <th class="text-center">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($compras as $compra)
-                    <tr>
-                        <td>{{ ($compras->currentPage() -1)*$compras->perPage()+$loop->iteration }}</td>
-                        <td>{{ $compra->numero_comprobante }}</td>
-                        <td>{{ $compra->cliente->apellidos }} {{ $compra->cliente->nombres }}</td>
-                        <td>{{ \Carbon\Carbon::parse($compra->fecha)->format('d/m/Y') }}</td>
-                        <td>$ {{ number_format($compra->valor_subtotal, 2, '.', ',') }}</td>
-                        <td>$ {{ number_format($compra->valor_iva, 2, '.', ',') }}</td>
-                        <td>$ {{ number_format($compra->valor_total, 2, '.', ',') }}</td>
-
-                        <td class="text-center">
-                            <a href="{{ url('/admin/compras/'.$compra->id) }}" class="btn btn-sm btn-info ">
-                                <i class="bi bi-eye"></i>
-                            </a>
-                            <a href="{{ url('/admin/compras/'.$compra->id.'/edit') }}"
-                                class="btn btn-sm btn-success "><i class="bi bi-pencil"></i>
-                                
-                            </a>
-                            <form action="{{ url('/admin/compras/delete/'.$compra->id) }}" method="POST"
-                                id="delete-form-{{ $compra->id }}" style="display: inline-block;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-danger "
-                                    onclick="preguntar({{$compra->id}}, event);">
-                                    <i class="bi bi-trash"></i></button>
-                            </form>
-                            <script>
-                                function preguntar(id, event) {
-                                    event.preventDefault();
-                                    Swal.fire({
-                                        title: '¿Estás seguro de eliminar esta compra?',
-                                        icon: 'warning',
-                                        showCancelButton: true,
-                                        confirmButtonColor: '#3085d6',
-                                        cancelButtonColor: '#d33',
-                                        confirmButtonText: 'Eliminar',
-                                        cancelButtonText: 'Cancelar'
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                            document.getElementById('delete-form-' + id).submit();
-                                        }
-                                    });
-                                }
-                            </script>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            @if($compras->hasPages())
-            <div class="d-flex justify-content-between align-items-center mt-4 px-3">
-                <div class="text-muted">
-                    Mostrando {{ $compras->firstItem() }} a {{ $compras->lastItem() }} de {{
-                    $compras->total() }} registros
+                                </a>
+                                <form action="{{ url('/admin/compras/delete/'.$compra->id) }}" method="POST"
+                                    id="delete-form-{{ $compra->id }}" style="display: inline-block;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger "
+                                        onclick="preguntar({{$compra->id}}, event);">
+                                        <i class="bi bi-trash"></i></button>
+                                </form>
+                                <script>
+                                    function preguntar(id, event) {
+                                        event.preventDefault();
+                                        Swal.fire({
+                                            title: '¿Estás seguro de eliminar esta compra?',
+                                            icon: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'Eliminar',
+                                            cancelButtonText: 'Cancelar'
+                                        }).then((result) => {
+                                            if (result.isConfirmed) {
+                                                document.getElementById('delete-form-' + id).submit();
+                                            }
+                                        });
+                                    }
+                                </script>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+                @if($compras->hasPages())
+                <div class="d-flex justify-content-between align-items-center mt-4 px-3">
+                    <div class="text-muted">
+                        Mostrando {{ $compras->firstItem() }} a {{ $compras->lastItem() }} de {{
+                        $compras->total() }} registros
+                    </div>
+                    {{ $compras->links('pagination::bootstrap-4') }}
                 </div>
-                {{ $compras->links('pagination::bootstrap-4') }}
+                @endif
+
             </div>
-            @endif
+
+
+
         </div>
     </div>
 </div>
@@ -153,32 +146,48 @@
 @endsection
 
 @push('scripts')
-<!-- <script>
-    function f_fecha_desde_mes() {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        return `${yyyy}-${mm}-01`;
+<script>
+
+    function reporte_compras_pdf() {
+
+        // Recuperar los valores de los campos de fecha
+        const fechaDesde = document.getElementById('fecha-desde').value;
+        const fechaHasta = document.getElementById('fecha-hasta').value;
+        // Valida el estado con operador ternario
+        let estado = document.getElementById('estado') ? document.getElementById('estado').value : '';
+        const search = document.getElementById('search').value;
+
+        // Construir la URL con los parámetros
+        const url = `{{ url('/admin/compras/reportecompraspdf') }}?search=${encodeURIComponent(search)}&fecha-desde=${encodeURIComponent(fechaDesde)}&fecha-hasta=${encodeURIComponent(fechaHasta)}`;
+        window.open(url, '_blank');
+
     }
 
-    function f_fecha_hasta_mes() {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = today.getMonth() + 1;
-        // Obtener el último día del mes en curso
-        const lastDay = new Date(yyyy, mm, 0).getDate();
-        return `${yyyy}-${String(mm).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
-    }
-    document.addEventListener('DOMContentLoaded', function () {
-        // Obtener la URL actual
+    // function f_fecha_desde_mes() {
+    //     const today = new Date();
+    //     const yyyy = today.getFullYear();
+    //     const mm = String(today.getMonth() + 1).padStart(2, '0');
+    //     return `${yyyy}-${mm}-01`;
+    // }
+
+    // function f_fecha_hasta_mes() {
+    //     const today = new Date();
+    //     const yyyy = today.getFullYear();
+    //     const mm = today.getMonth() + 1;
+    //     // Obtener el último día del mes en curso
+    //     const lastDay = new Date(yyyy, mm, 0).getDate();
+    //     return `${yyyy}-${String(mm).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+    // }
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     // Obtener la URL actual
 
 
 
 
-        document.getElementById('fecha-desde').value = f_fecha_desde_mes()
-        document.getElementById('fecha-hasta').value = f_fecha_hasta_mes()
+    //     document.getElementById('fecha-desde').value = f_fecha_desde_mes()
+    //     document.getElementById('fecha-hasta').value = f_fecha_hasta_mes()
 
-        cargarProductosInsumos();
-    });
-</script> -->
+    //     cargarProductosInsumos();
+    // });
+</script>
 @endpush

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ajuste;
 use App\Models\CatalogoDetalle;
 use App\Models\Consulta;
 use App\Models\ConsultaDetalle;
@@ -14,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 class ConsultaController extends Controller
 {
     /**
@@ -57,7 +58,7 @@ class ConsultaController extends Controller
         } else {
             $fecha_desde = date('Y-m-01');
             $fecha_hasta = date('Y-m-t');
-            //$query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+            $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
         }
 
         $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
@@ -95,7 +96,77 @@ class ConsultaController extends Controller
         $consultas->appends(['fecha-desde' => $fecha_desde, 'fecha-hasta' => $fecha_hasta]);
         return view('admin.consultas.index', compact('consultas', 'buscar', 'fecha_desde', 'fecha_hasta'));
     }
-    
+
+    public function reporteconsultaspdf(Request $request)
+    {
+
+      //  return $request;
+        $buscar = $request->get('search');
+        $fecha_desde = $request->get('fecha-desde');
+        $fecha_hasta = $request->get('fecha-hasta');
+
+        // Consulta Eloquent con relación a Cliente
+        $query = Consulta::with('paciente:id,nombres,apellidos,cedula,telefono,email')
+            ->select(
+                'id',
+                'fecha',
+                'paciente_id',
+                'tipo_consulta',
+                'comentario_1',
+                'comentario_2',
+                'comentario_3',
+                'comentario_4',
+                'establecimiento',
+                'alergias',
+                'medicamentos',
+                'antecedentes_personales',
+                'antecedentes_familiares'
+            );
+
+
+
+
+
+        if ($fecha_desde && $fecha_hasta) {
+
+            $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+        } else {
+            $fecha_desde = date('Y-m-01');
+            $fecha_hasta = date('Y-m-t');
+            $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+        }
+
+        if ($buscar) {
+
+
+            $query->whereHas('paciente', function ($q) use ($buscar) {
+                $q->where('nombres', 'like', '%' . $buscar . '%')
+                    ->orWhere('apellidos', 'like', '%' . $buscar . '%')
+                    ->orWhere('cedula', 'like', '%' . $buscar . '%');
+            });
+        }
+        $query->orderBy('fecha', 'desc');
+
+        $consultas = $query->orderBy('fecha', 'asc')->get();
+
+       // return $consultas;
+        $ajuste = Ajuste::first();
+        // return "Reporte PDF - Estado: $estado, Search: $search";
+
+        $pdf = Pdf::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'DejaVu Sans',
+            'isPhpEnabled' => true // IMPORTANTE: Habilitar PHP en DOMPDF
+        ]);
+
+        $pdf->loadView('admin.consultas.reportepdf', compact('consultas', 'ajuste'));
+        $pdf->setPaper('a4', 'landscape');
+
+        $nombreArchivo = 'rpt_atenciones_' . now()->format('Ymd_His') . '.pdf';
+
+        return $pdf->stream($nombreArchivo);
+    }
     public function index()
     {
         //
