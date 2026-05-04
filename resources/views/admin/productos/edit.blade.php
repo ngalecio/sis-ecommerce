@@ -366,7 +366,7 @@
                                             <span class="input-group-text"><i class="bi bi-image"></i></span>
                                             <input type="file" class="form-control" id="imagen" name="imagen"
                                                 accept="image/*" @error('imagen') is-invalid @enderror
-                                                @if(!(isset($producto) && $producto->imagen)) required @endif
+                                                @if(!(isset($producto) && $producto->imagen))  @endif
                                             onchange="mostrarImagen(event)">
                                             @error('imagen')
                                             <small style="color:red">{{ $message}}</small>

@@ -756,7 +756,27 @@
                 console.error(error);
             });
     }
-    function actualizarPrecioInsumo() {
+        function actualizarPrecioInsumo() {
+                const productoSelect = document.getElementById('id-productos-insumos');
+                const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
+
+                const tipo_producto = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-tipo-producto') || '';
+                alert(`Tipo de producto seleccionado: ${tipo_producto}`);
+
+                // Habilitar el input de precio
+
+                document.getElementById('precio').disabled = true;
+                if (tipo_producto === 'S') {
+                    document.getElementById('precio').disabled = false;
+                }
+
+                if (precio) {
+                    document.getElementById('precio').value = parseFloat(precio).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                } else {
+                    document.getElementById('precio').value = '';
+                }
+            }
+    function actualizarPrecioInsumo_BK() {
         const productoSelect = document.getElementById('id-productos-insumos');
         const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
 
@@ -885,7 +905,8 @@
             lista_insumos.innerHTML = '<option value="">Cargando...</option>';
 
 
-            let url = `/admin/productos/insumos-list`;
+            let url = `/admin/productos/productos-list`;
+     
 
 
             try {

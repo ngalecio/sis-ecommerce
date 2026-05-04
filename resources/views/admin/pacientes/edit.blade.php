@@ -637,7 +637,7 @@
                                                                 <span class="input-group-text"><i
                                                                         class="bi bi-currency-dollar"></i></span>
                                                                 <input type="number" step="0.01" class="form-control"
-                                                                    id="precio" name="precio" placeholder="Precio"
+                                                                    id="precio" name="precio" placeholder="Precio" oninput="onChangePrecioFraccion()"
                                                                     disabled>
                                                             </div>
                                                         </div>
@@ -1228,11 +1228,23 @@
                 console.error(error);
             });
     }
+
     function actualizarPrecioInsumo() {
         const productoSelect = document.getElementById('id-productos-insumos');
         const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
         const unidad_medida = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-unidad-medida') || '';
         const cantidad_por_unidad = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-cantidad-por-unidad') || '';
+
+
+            const tipo_producto = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-tipo-producto') || '';
+        
+
+        // Habilitar el input de precio
+
+        document.getElementById('precio').disabled = true;
+        if (tipo_producto === 'S') {
+            document.getElementById('precio').disabled = false;
+        }
 
         const precio_fraccion = precio / cantidad_por_unidad;
 
@@ -1261,7 +1273,7 @@
         lista_insumos.innerHTML = '<option value="">Cargando...</option>';
 
 
-        let url = `/admin/productos/insumos-list`;
+        let url = `/admin/productos/productos-list`;
 
 
         try {
@@ -1288,6 +1300,7 @@
                     optionSearch.setAttribute('data-precio', insumo.precio);
                     optionSearch.setAttribute('data-unidad-medida', insumo.unidad_medida);
                     optionSearch.setAttribute('data-cantidad-por-unidad', insumo.cantidad_por_unidad || '1');
+                    optionSearch.setAttribute('data-tipo-producto', insumo.tipo_producto);
                     lista_insumos.appendChild(optionSearch);
 
 
@@ -1357,14 +1370,27 @@
     let iva = 0;
     let totalIva = 0;
     let ice = 0;
+
+    function onChangePrecioFraccion() {
+        const precio = parseFloat(document.getElementById('precio').value) || 0;
+        document.getElementById('precio_fraccion').value = precio.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });  
+
+    }
     function agregarInsumo() {
         const productoSelect = document.getElementById('id-productos-insumos');
         const producto = productoSelect.value;
         const nombre = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-nombre') || '';
+       
+         const tipo_producto = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-tipo-producto') || '';
         const cantidad = document.getElementById('cantidad').value;
         const unidad_medida = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-unidad-medida') || '';
-        const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
-        const precio_fraccion = document.getElementById('precio_fraccion').value;
+      //  const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';
+        const precio = document.getElementById('precio').value;
+            let precio_fraccion = document.getElementById('precio_fraccion').value;
+            // alert(`Tipo de producto seleccionado v2: ${tipo_producto} nombre de producto ${nombre}` );
+            // if (tipo_producto === 'S') {
+            //     precio_fraccion = precio;
+            // }
 
         if (!producto || !nombre || !cantidad || !unidad_medida || !precio) {
             alert('Complete todos los campos de insumo.');

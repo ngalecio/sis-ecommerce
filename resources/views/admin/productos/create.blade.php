@@ -21,7 +21,7 @@
                                         <label for="rol">Categoria(*)</label>
                                         <div class="input-group">
                                             <span class="input-group-text"><i class="bi bi-tags"></i></span>
-                                            <select name="categoria_id" id="categoria_id" class="form-select">
+                                            <select name="categoria_id" id="categoria_id" class="form-select" required>
                                                 <option value="">-- Seleccione una categoria --</option>
                                                 @foreach($categorias as $categoria)
                                                 <option value="{{ $categoria->id }}" {{ old('categoria_id', request()->
@@ -226,7 +226,7 @@
                                             <select name="tipo_producto" id="tipo_producto" class="form-control"
                                                 required>
                                                 <option value="">-- Seleccione --</option>
-                                                <option value="B" {{ old('tipo_producto')=='B' ? 'selected' : '' }}>BIEN
+                                                <option value="B" {{ (old('tipo_producto')=='B' || old('tipo_producto')===null ) ? 'selected' : '' }}>BIEN
                                                 </option>
                                                 <option value="S" {{ old('tipo_producto')=='S' ? 'selected' : '' }}>
                                                     SERVICIO</option>
@@ -249,7 +249,7 @@
                                             <span class="input-group-text"><i class="bi bi-percent"></i></span>
                                             <select name="aplica_iva" id="aplica_iva" class="form-control" required>
                                                 <option value="">-- Seleccione --</option>
-                                                <option value="0" {{ old('aplica_iva')=='0' ? 'selected' : '' }}>0% IVA
+                                                <option value="0" {{ (old('aplica_iva')=='0' || old('aplica_iva')===null ) ? 'selected' : '' }}>0% IVA
                                                 </option>
                                                 <option value="2" {{ old('aplica_iva')=='2' ? 'selected' : '' }}>Grava
                                                     IVA</option>
@@ -273,7 +273,7 @@
                                             <span class="input-group-text"><i class="bi bi-tags"></i></span>
                                             <select name="unidad_medida" id="unidad_medida"  class="form-select"
                                             onchange="handleUnidadMedidaChange()">
-                                                <option value="">--Seleccione unidad de medida--</option>
+                                            
                                                 @foreach($unidades_medida as $unidad)
                                                 <option value="{{ $unidad->codigo_catalogo_detalle }}" {{ old('unidad_medida',
                                                     request()->unidad_medida)
@@ -312,9 +312,9 @@
                                         <span class="input-group-text"><i class="bi bi-printer"></i></span>
                                         <select name="imprime_receta" id="imprime_receta" class="form-control" required>
                                             <option value="">-- Seleccione --</option>
-                                            <option value="N" {{ old('imprime_receta')=='N' ? 'selected' : '' }}>NO
+                                            <option value="N" {{ (old('imprime_receta')==='N' || old('imprime_receta')===null) ? 'selected' : '' }}>NO
                                             </option>
-                                            <option value="S" {{ old('imprime_receta')=='S' ? 'selected' : '' }}>SI
+                                            <option value="S" {{ old('imprime_receta')==='S' ? 'selected' : '' }}>SI
                                             </option>
                                         </select>
                                     </div>
@@ -334,7 +334,7 @@
                                             <span class="input-group-text"><i class="bi bi-toggle-on"></i></span>
                                             <select name="estado" id="estado" class="form-control" required>
                                                 <option value="">-- Seleccione --</option>
-                                                <option value="A" {{ old('estado')=='A' ? 'selected' : '' }}>ACTIVO
+                                                <option value="A" {{ (old('estado')=='A' || old('estado')===null ) ? 'selected' : '' }}>ACTIVO
                                                 </option>
                                                 <option value="I" {{ old('estado')=='I' ? 'selected' : '' }}>INACTIVO
                                                 </option>
@@ -360,7 +360,7 @@
                                             <span class="input-group-text"><i class="bi bi-image"></i></span>
                                             <input type="file" class="form-control" id="imagen" name="imagen"
                                                 accept="image/*" @error('imagen') is-invalid @enderror
-                                                @if(!(isset($producto) && $producto->imagen)) required @endif
+                                                @if(!(isset($producto) && $producto->imagen)) @endif
                                             onchange="mostrarImagen(event)">
                                             @error('imagen')
                                             <small style="color:red">{{ $message}}</small>
