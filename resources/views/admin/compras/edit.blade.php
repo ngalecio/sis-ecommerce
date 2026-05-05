@@ -868,7 +868,7 @@
 
     // Array para almacenar los insumos agregados
     let insumosDetalle = [];
-    let porcentajeIva = 0.12; // 12% de IVA
+    let porcentajeIva = 0.15; // 15% de IVA
     let subtototalIva = 0;
     let subtotalCero = 0;
     let descuento = 0;
