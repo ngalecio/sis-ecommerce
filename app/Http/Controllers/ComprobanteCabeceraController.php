@@ -250,7 +250,7 @@ class ComprobanteCabeceraController extends Controller
         {
         $fecha_desde = date('Y-m-01');
         $fecha_hasta = date('Y-m-t');
-       //$query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
+        $query->whereBetween('fecha', [$fecha_desde, $fecha_hasta]);
         }
 
         if ($buscar) {

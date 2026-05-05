@@ -223,7 +223,7 @@ Route::get('/admin/facturas/reportefacturaspdf', [ComprobanteCabeceraController:
 Route::get('/admin/facturas/{id}', [ComprobanteCabeceraController::class, 'showFactura'])->name('admin.facturas.show')->middleware('auth');
 Route::get('/admin/facturas/{id}/edit', [ComprobanteCabeceraController::class, 'editFactura'])->name('admin.facturas.edit')->middleware('auth');
 //Route::get('/admin/catalogos2', [CatalogoController::class, 'listJson'])->name('admin.catalogos2.index')->middleware('auth');
-Route::post('/admin/facturas/reportepdf', [ComprobanteCabeceraController::class, 'reportePDF'])->name('admin.factura.reportepdf')->middleware('auth');
+Route::post('/admin/facturas/reportepdf', [ComprobanteCabeceraController::class, 'reportePDF'])->name('admin.facturas.reportepdf')->middleware('auth');
 
 //     return view('test-form');
 // });
