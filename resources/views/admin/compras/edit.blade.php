@@ -24,13 +24,10 @@
 
 
                     <button type="button" class="btn btn-primary" style="float: right; margin-left: 10px;"
-                        onclick="reporte_ficha_pdf()">
-                        <i class="bi bi-person-plus"></i> PDF FICHA
+                        onclick="reporte_compra_pdf()">
+                        <i class="bi bi-person-plus"></i> PDF
                     </button>
-                    <button type="button" class="btn btn-primary" style="float: right; margin-left: 10px;"
-                        onclick="reporte_todos_pdf()">
-                        <i class="bi bi-person-plus"></i> PDF TODOS
-                    </button>
+      
                 </h4>
             </div>
             <div class="card-body">
@@ -418,12 +415,13 @@
 @push('scripts')
 <script>
 
-    function reporte_ficha_pdf() {
-        const idPacienteElem = document.getElementById('id-paciente');
-        const id_paciente = idPacienteElem ? idPacienteElem.value || '0' : '0';
 
-        if (!id_paciente || id_paciente === '0') {
-            alert('El paciente debe estar registrado para generar el PDF.');
+    function reporte_compra_pdf() {
+        const idComprobanteElem = document.getElementById('id-comprobante');
+        const id_comprobante = idComprobanteElem ? idComprobanteElem.value || '0' : '0';
+
+        if (!id_comprobante || id_comprobante === '0') {
+            alert('El comprobante debe estar registrado para generar el PDF.');
             return;
         }
 
@@ -434,14 +432,14 @@
             btnReporte.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Generando...';
         }
 
-        fetch("{{ route('admin.pacientes.reportepdf') }}", {
+        fetch("{{ route('admin.compras.reportepdf') }}", {
             method: "POST",
             headers: {
                 "X-CSRF-TOKEN": '{{ csrf_token() }}',
                 "Accept": "application/pdf",
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ id: id_paciente })
+            body: JSON.stringify({ id: id_comprobante })
         })
             .then(response => {
                 if (!response.ok) throw new Error('Error en el servidor');
@@ -453,7 +451,7 @@
                 const url = window.URL.createObjectURL(file);
 
                 // 2. Crear un nombre descriptivo
-                const nombreArchivo = `reporte-ficha-${id_paciente}.pdf`;
+                const nombreArchivo = `compra-${id_comprobante}.pdf`;
 
                 // --- OPCIÓN: DESCARGA DIRECTA (Soluciona el error de conexión) ---
                 const a = document.createElement('a');
@@ -480,209 +478,9 @@
                 }
             });
     }
-
-    function reporte_ficha_pdf3() {
-        const idPacienteElem = document.getElementById('id-paciente');
-        const id_paciente = idPacienteElem ? idPacienteElem.value || '0' : '0';
-
-        if (!id_paciente || id_paciente === '0') {
-            alert('El paciente debe estar registrado para generar el PDF.');
-            return;
-        }
-
-        // --- EL CAMBIO EMPIEZA AQUÍ ---
-
-        // 1. Creamos un formulario temporal (oculto)
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = "{{ route('admin.pacientes.reportepdf') }}";
-        form.target = '_blank'; // Esto hace que se abra en pestaña nueva
-
-        // 2. Agregamos el Token CSRF (indispensable para POST en Laravel)
-        const csrfInput = document.createElement('input');
-        csrfInput.type = 'hidden';
-        csrfInput.name = '_token';
-        csrfInput.value = '{{ csrf_token() }}';
-        form.appendChild(csrfInput);
-
-        // 3. Agregamos el ID del paciente
-        const idInput = document.createElement('input');
-        idInput.type = 'hidden';
-        idInput.name = 'id';
-        idInput.value = id_paciente;
-        form.appendChild(idInput);
-
-        // 4. Lo añadimos al documento, lo enviamos y lo eliminamos
-        document.body.appendChild(form);
-        form.submit();
-        document.body.removeChild(form);
-
-        // Nota: Como se abre una pestaña nueva, no es estrictamente necesario 
-        // manejar el estado del botón "Generando...", pero si quieres puedes 
-        // poner un pequeño delay para reactivarlo.
-    }
-
-    function reporte_ficha_pdf2() {
-        // Mostrar loading
-        const id_paciente = document.getElementById('id-paciente').value || '0';
-        if (!id_paciente || id_paciente === '0') {
-            alert('El paciente debe estar registrado para generar el PDF.');
-            return;
-        }
-
-        const btnReporte = event?.target || null;
-        if (btnReporte) {
-            btnReporte.disabled = true;
-            btnReporte.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Generando...';
-        }
+ 
 
 
-
-        const data = {
-
-            id: id_paciente
-        }
-
-        fetch("{{ route('admin.pacientes.reportepdf') }}", {
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": '{{ csrf_token() }}',
-                "Accept": "application/pdf",
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Error al generar el PDF');
-                }
-                return response.blob();
-            })
-            .then(blob => {
-                // Crear URL del blob
-                //const url = window.URL.createObjectURL(blob);
-
-                // Opción A: Abrir en nueva pestaña con nombre
-                // Abrir el PDF en una nueva pestaña con el nombre correcto
-                // const fileName = 'reporte-paciente-' + id_paciente + '.pdf';
-                // const pdfWindow = window.open('', '_blank');
-                // if (pdfWindow) {
-                //     pdfWindow.document.write(
-                //         `<html><head><title>${fileName}</title></head><body style="margin:0">
-                //         <embed src="${url}" type="application/pdf" width="100%" height="100%" />
-                //         </body></html>`
-                //     );
-                // }
-
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement('a');
-
-                a.href = url;
-                // Aquí defines el nombre real que tendrá el archivo al bajarse
-                a.download = `Reporte_Pacientes_${new Date().toISOString().slice(0, 10)}.pdf`;
-
-                document.body.appendChild(a);
-                a.click();
-
-                // Limpieza
-                document.body.removeChild(a);
-                window.URL.revokeObjectURL(url);
-
-                return;
-
-
-
-                const url2 = window.URL.createObjectURL(blob);
-                const nombreArchivo = 'Reporte-Pacientes-' + new Date().toLocaleDateString() + '.pdf';
-
-                // 1. Abrir una nueva ventana en blanco
-                const nuevaVentana = window.open();
-
-                // 2. Inyectar un HTML básico con el título y un iframe que ocupe todo
-                nuevaVentana.document.write(
-                    `<html>
-            <head>
-                <title>${nombreArchivo}</title>
-                <style>body { margin: 0; }</style>
-            </head>
-            <body>
-                <embed src="${url}" type="application/pdf" width="100%" height="100%">
-            </body>
-        </html>`
-                );
-
-                // Opción B: Descargar directamente (descomenta si prefieres esto)
-                // const a = document.createElement('a');
-                // a.href = url;
-                // a.download = 'reporte-pacientes-' + new Date().getTime() + '.pdf';
-                // document.body.appendChild(a);
-                // a.click();
-                // document.body.removeChild(a);
-
-                // Limpiar URL del blob después de un tiempo
-                setTimeout(() => window.URL.revokeObjectURL(url), 100);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error al generar el PDF: ' + error.message);
-            })
-            .finally(() => {
-                // Restaurar botón
-                if (btnReporte) {
-                    btnReporte.disabled = false;
-                    btnReporte.innerHTML = '<i class="bi bi-file-pdf"></i> Generar Reporte';
-                }
-            });
-    }
-    function reporte_ficha_pdf_get() {
-        const id_paciente = document.getElementById('id-paciente').value || '0';
-        if (!id_paciente || id_paciente === '0') {
-            alert('El paciente debe estar registrado para generar el PDF.');
-            return;
-        }
-        const url = "{{ url('/admin/pacientes/reporte/') }}/" + id_paciente;
-        window.open(url, '_blank');
-    }
-
-
-
-    function reporte_todos_pdf() {
-        const idPacienteElem = document.getElementById('id-paciente');
-        const id_paciente = idPacienteElem ? idPacienteElem.value || '0' : '0';
-        if (!id_paciente || id_paciente === '0') {
-            alert('El paciente debe estar registrado para generar el PDF.');
-            return;
-        }
-        const url = "{{ url('/admin/pacientes/reportetodos') }}/";
-        window.open(url, '_blank');
-    }
-
-    function reporte_todos_pdf_bk() {
-        fetch("{{ url('/admin/pacientes/reportetodos') }}", {
-            method: "POST",
-            headers: {
-                "X-CSRF-TOKEN": '{{ csrf_token() }}',
-                "Accept": "application/json"
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    return response.json().then(err => Promise.reject(err));
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.url) {
-                    window.open(data.url, '_blank');
-                } else {
-                    alert('No se pudo generar el PDF.');
-                }
-            })
-            .catch(error => {
-                alert('Error al generar el PDF.');
-                console.error(error);
-            });
-    }
     function actualizarPrecioInsumo() {
         const productoSelect = document.getElementById('id-productos-insumos');
         const precio = productoSelect.options[productoSelect.selectedIndex]?.getAttribute('data-precio') || '';

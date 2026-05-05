@@ -39,11 +39,11 @@
             margin-top: 10px;
         }
     </style>
-    <title>Factura</title>
+    <title>Compra</title>
 </head>
 <body>
     <div class="container">
-        <!-- CABECERA DE FACTURA -->
+        <!-- CABECERA DE COMPRA -->
         <table>
             <tr>
                 <th colspan="6" style="text-align:center; background:#fff;">
@@ -56,19 +56,19 @@
                 </th>
             </tr>
             <tr>
-                <td colspan="3"><strong>Factura N°:</strong> {{ $factura->numero_comprobante ?? '-' }}</td>
-                <td colspan="3"><strong>Fecha:</strong> {{ $factura->fecha ? \Carbon\Carbon::parse($factura->fecha)->format('d/m/Y') : '-' }}</td>
+                <td colspan="3"><strong>Compra N°:</strong> {{ $compra->numero_comprobante ?? '-' }}</td>
+                <td colspan="3"><strong>Fecha:</strong> {{ $compra->fecha ? \Carbon\Carbon::parse($compra->fecha)->format('d/m/Y') : '-' }}</td>
             </tr>
             <tr>
-                <td colspan="3"><strong>Cliente:</strong> {{ $factura->cliente->nombres ?? '-' }} {{ $factura->cliente->apellidos ?? '' }}</td>
-                <td colspan="3"><strong>Cédula/DNI:</strong> {{ $factura->cliente->cedula ?? '-' }}</td>
+                <td colspan="3"><strong>Proveedor:</strong> {{ $compra->cliente->nombres ?? '-' }} {{ $compra->cliente->apellidos ?? '' }}</td>
+                <td colspan="3"><strong>Cédula/DNI:</strong> {{ $compra->cliente->cedula ?? '-' }}</td>
             </tr>
             <tr>
-                <td colspan="3"><strong>Dirección:</strong> {{ $factura->cliente->direccion ?? '-' }}</td>
-                <td colspan="3"><strong>Teléfono:</strong> {{ $factura->cliente->telefono ?? '-' }}</td>
+                <td colspan="3"><strong>Dirección:</strong> {{ $compra->cliente->direccion ?? '-' }}</td>
+                <td colspan="3"><strong>Teléfono:</strong> {{ $compra->cliente->telefono ?? '-' }}</td>
             </tr>
         </table>
-        <!-- DETALLE DE FACTURA -->
+        <!-- DETALLE DE COMPRA -->
         <table>
             <thead>
                 <tr>
@@ -83,7 +83,7 @@
             </thead>
             <tbody>
                 @php $i = 1; @endphp
-                @foreach($factura->detalles as $detalle)
+                @foreach($compra->detalles as $detalle)
                 <tr>
                     <td>{{ $i++ }}</td>
                     <td>{{ $detalle->producto->nombre ?? '-' }}</td>
@@ -98,15 +98,15 @@
             <tfoot>
                 <tr>
                     <th colspan="6" style="text-align:right;">Subtotal</th>
-                    <td style="text-align:right; font-weight:bold;">{{ number_format($factura->valor_subtotal, 2) }}</td>
+                    <td style="text-align:right; font-weight:bold;">{{ number_format($compra->valor_subtotal, 2) }}</td>
                 </tr>
                 <tr>
                     <th colspan="6" style="text-align:right;">IVA</th>
-                    <td style="text-align:right; font-weight:bold;">{{ number_format($factura->valor_iva, 2) }}</td>
+                    <td style="text-align:right; font-weight:bold;">{{ number_format($compra->valor_iva, 2) }}</td>
                 </tr>
                 <tr>
                     <th colspan="6" style="text-align:right;">Total</th>
-                    <td style="text-align:right; font-weight:bold;">{{ number_format($factura->valor_total, 2) }}</td>
+                    <td style="text-align:right; font-weight:bold;">{{ number_format($compra->valor_total, 2) }}</td>
                 </tr>
             </tfoot>
         </table>
@@ -128,7 +128,7 @@
             $size = 9;
             $color = array(0.5, 0.5, 0.5);
             $pdf->page_text(720, 565, $text, $font, $size, $color);
-            $pdf->page_text(30, 565, "Factura", $font, $size, $color);
+            $pdf->page_text(30, 565, "Compra", $font, $size, $color);
         }
     </script>
 </body>

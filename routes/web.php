@@ -209,10 +209,11 @@ Route::delete('/admin/consultas/{id}/remove_imagen', [ConsultaController::class,
 
 Route::get('/admin/compras', [ComprobanteCabeceraController::class, 'lista_compras'])->name('admin.compras.index')->middleware('auth');
 Route::put('/admin/compras/registrar/{id}', [ComprobanteCabeceraController::class, 'registrarCompra'])->name('admin.compras.registrar')->middleware('auth');
-Route::get('/admin/compras/reportecompraspdf', [ComprobanteCabeceraController::class, 'reportecompraspdf'])->name('admin.productos.reportecompraspdf')->middleware('auth');
+Route::get('/admin/compras/reportecompraspdf', [ComprobanteCabeceraController::class, 'reportecompraspdf'])->name('admin.compras.reportecompraspdf')->middleware('auth');
 
 Route::get('/admin/compras/{id}', [ComprobanteCabeceraController::class, 'showCompra'])->name('admin.compras.show')->middleware('auth');
 Route::get('/admin/compras/{id}/edit', [ComprobanteCabeceraController::class, 'edit'])->name('admin.compras.edit')->middleware('auth');
+Route::post('/admin/compras/reportepdf', [ComprobanteCabeceraController::class, 'reportecompraPDF'])->name('admin.compras.reportepdf')->middleware('auth');
 
 
 Route::get('/admin/facturas', [ComprobanteCabeceraController::class, 'lista_facturas'])->name('admin.facturas.index')->middleware('auth');
@@ -222,7 +223,7 @@ Route::get('/admin/facturas/reportefacturaspdf', [ComprobanteCabeceraController:
 Route::get('/admin/facturas/{id}', [ComprobanteCabeceraController::class, 'showFactura'])->name('admin.facturas.show')->middleware('auth');
 Route::get('/admin/facturas/{id}/edit', [ComprobanteCabeceraController::class, 'editFactura'])->name('admin.facturas.edit')->middleware('auth');
 //Route::get('/admin/catalogos2', [CatalogoController::class, 'listJson'])->name('admin.catalogos2.index')->middleware('auth');
-Route::post('/admin/facturas/reportepdf', [ComprobanteCabeceraController::class, 'reportePDF'])->name('admin.facturas.reportepdf')->middleware('auth');
+Route::post('/admin/facturas/reportepdf', [ComprobanteCabeceraController::class, 'reportePDF'])->name('admin.factura.reportepdf')->middleware('auth');
 
 //     return view('test-form');
 // });

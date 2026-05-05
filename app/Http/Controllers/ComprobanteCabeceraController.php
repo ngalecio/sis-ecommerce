@@ -692,11 +692,62 @@ class ComprobanteCabeceraController extends Controller
         // $pdf= Pdf::loadView('admin.pacientes.reporte', ['paciente' => $paciente]);
         // $pdf->setPaper('a4', 'portrait');
         // return $pdf->stream('reporte_paciente_'.$id.'.pdf');
-
-        $pdf->loadView('admin.facturas.plantillafactura', compact('factura'));
+        $ajuste = Ajuste::first();
+        $pdf->loadView('admin.facturas.plantillafactura', compact('factura', 'ajuste'));
         $pdf->setPaper('a4', 'portrait');
 
         $nombreArchivo = 'factura-' . ($factura->numero_comprobante ?? $factura->id) . '.pdf';
+
+
+        return $pdf->stream($nombreArchivo);
+    }
+
+
+    public function reportecompraPDF(Request $request)
+    {
+        $id = $request->get('id');
+
+        $compra = ComprobanteCabecera::select(
+            'id',
+            'tipo_comprobante',
+            'cliente_id',
+            'fecha',
+            'valor_subtotal_cero',
+            'valor_subtotal_iva',
+            'valor_subtotal',
+            'valor_descuento',
+            'valor_iva',
+            'valor_total',
+            'establecimiento',
+            'punto_emision',
+            'condicion_credito',
+            'estado1',
+            'estado2',
+            'estado3',
+            'numero_comprobante',
+            'created_at',
+            'updated_at'
+        )
+            ->with([
+                'cliente:id,nombres,apellidos,direccion,telefono,email,cedula',
+                'detalles:id,comprobante_id,producto_id,cantidad,precio,total,subtotal',
+                'detalles.producto:id,nombre,descripcion,codigo',
+            ])
+            ->find($id);
+        $pdf = Pdf::setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'DejaVu Sans'
+        ]);
+
+        // $pdf= Pdf::loadView('admin.pacientes.reporte', ['paciente' => $paciente]);
+        // $pdf->setPaper('a4', 'portrait');
+        // return $pdf->stream('reporte_paciente_'.$id.'.pdf');
+        $ajuste = Ajuste::first();
+        $pdf->loadView('admin.compras.plantillacompra', compact('compra', 'ajuste'));
+        $pdf->setPaper('a4', 'portrait');
+
+        $nombreArchivo = 'compra-' . ($compra->numero_comprobante ?? $compra->id) . '.pdf';
 
 
         return $pdf->stream($nombreArchivo);

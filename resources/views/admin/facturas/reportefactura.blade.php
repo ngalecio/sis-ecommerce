@@ -56,10 +56,10 @@
                 <tr>
                     <th colspan="10" style="text-align:center; background:#fff;">
                         <span style="font-size:18px; font-weight:bold; color:#2d2d2d; letter-spacing:2px; text-transform:uppercase;">
-                            CENTRO MÉDICO
+                            {{ $ajuste->nombre ?? 'Nombre de la Empresa' }}
                         </span><br>
                         <span style="font-size:10px; color:#555; margin-top:5px;">
-                            Sistema de Gestión de Pacientes
+                            {{ $ajuste->descripcion ?? 'Sistema de Gestion' }}
                         </span>
                     </th>
                 </tr>
